@@ -1,0 +1,415 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3FE17BCE1B38E92200EC2BFD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */; };
+		3FE17BD01B38E92200EC2BFD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BCF1B38E92200EC2BFD /* ViewController.swift */; };
+		3FE17BD21B38E92200EC2BFD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FE17BD11B38E92200EC2BFD /* Images.xcassets */; };
+		3FE17BD51B38E92200EC2BFD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3FE17BD31B38E92200EC2BFD /* Main.storyboard */; };
+		3FE17BE11B38E92200EC2BFD /* AugustusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BE01B38E92200EC2BFD /* AugustusTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3FE17BDB1B38E92200EC2BFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3FE17BC01B38E92200EC2BFD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3FE17BC71B38E92200EC2BFD;
+			remoteInfo = Augustus;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3FE17BC81B38E92200EC2BFD /* Augustus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Augustus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FE17BCC1B38E92200EC2BFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3FE17BCF1B38E92200EC2BFD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3FE17BD11B38E92200EC2BFD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		3FE17BD41B38E92200EC2BFD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3FE17BDA1B38E92200EC2BFD /* AugustusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AugustusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FE17BDF1B38E92200EC2BFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3FE17BE01B38E92200EC2BFD /* AugustusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AugustusTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3FE17BC51B38E92200EC2BFD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3FE17BD71B38E92200EC2BFD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3FE17BBF1B38E92200EC2BFD = {
+			isa = PBXGroup;
+			children = (
+				3FE17BCA1B38E92200EC2BFD /* Augustus */,
+				3FE17BDD1B38E92200EC2BFD /* AugustusTests */,
+				3FE17BC91B38E92200EC2BFD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3FE17BC91B38E92200EC2BFD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3FE17BC81B38E92200EC2BFD /* Augustus.app */,
+				3FE17BDA1B38E92200EC2BFD /* AugustusTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3FE17BCA1B38E92200EC2BFD /* Augustus */ = {
+			isa = PBXGroup;
+			children = (
+				3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */,
+				3FE17BCF1B38E92200EC2BFD /* ViewController.swift */,
+				3FE17BD11B38E92200EC2BFD /* Images.xcassets */,
+				3FE17BD31B38E92200EC2BFD /* Main.storyboard */,
+				3FE17BCB1B38E92200EC2BFD /* Supporting Files */,
+			);
+			path = Augustus;
+			sourceTree = "<group>";
+		};
+		3FE17BCB1B38E92200EC2BFD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3FE17BCC1B38E92200EC2BFD /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3FE17BDD1B38E92200EC2BFD /* AugustusTests */ = {
+			isa = PBXGroup;
+			children = (
+				3FE17BE01B38E92200EC2BFD /* AugustusTests.swift */,
+				3FE17BDE1B38E92200EC2BFD /* Supporting Files */,
+			);
+			path = AugustusTests;
+			sourceTree = "<group>";
+		};
+		3FE17BDE1B38E92200EC2BFD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3FE17BDF1B38E92200EC2BFD /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3FE17BC71B38E92200EC2BFD /* Augustus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FE17BE41B38E92200EC2BFD /* Build configuration list for PBXNativeTarget "Augustus" */;
+			buildPhases = (
+				3FE17BC41B38E92200EC2BFD /* Sources */,
+				3FE17BC51B38E92200EC2BFD /* Frameworks */,
+				3FE17BC61B38E92200EC2BFD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Augustus;
+			productName = Augustus;
+			productReference = 3FE17BC81B38E92200EC2BFD /* Augustus.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3FE17BD91B38E92200EC2BFD /* AugustusTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FE17BE71B38E92200EC2BFD /* Build configuration list for PBXNativeTarget "AugustusTests" */;
+			buildPhases = (
+				3FE17BD61B38E92200EC2BFD /* Sources */,
+				3FE17BD71B38E92200EC2BFD /* Frameworks */,
+				3FE17BD81B38E92200EC2BFD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3FE17BDC1B38E92200EC2BFD /* PBXTargetDependency */,
+			);
+			name = AugustusTests;
+			productName = AugustusTests;
+			productReference = 3FE17BDA1B38E92200EC2BFD /* AugustusTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3FE17BC01B38E92200EC2BFD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "Ryan Globus";
+				TargetAttributes = {
+					3FE17BC71B38E92200EC2BFD = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+					3FE17BD91B38E92200EC2BFD = {
+						CreatedOnToolsVersion = 6.3.2;
+						TestTargetID = 3FE17BC71B38E92200EC2BFD;
+					};
+				};
+			};
+			buildConfigurationList = 3FE17BC31B38E92200EC2BFD /* Build configuration list for PBXProject "Augustus" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3FE17BBF1B38E92200EC2BFD;
+			productRefGroup = 3FE17BC91B38E92200EC2BFD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3FE17BC71B38E92200EC2BFD /* Augustus */,
+				3FE17BD91B38E92200EC2BFD /* AugustusTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3FE17BC61B38E92200EC2BFD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FE17BD21B38E92200EC2BFD /* Images.xcassets in Resources */,
+				3FE17BD51B38E92200EC2BFD /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3FE17BD81B38E92200EC2BFD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3FE17BC41B38E92200EC2BFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FE17BD01B38E92200EC2BFD /* ViewController.swift in Sources */,
+				3FE17BCE1B38E92200EC2BFD /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3FE17BD61B38E92200EC2BFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FE17BE11B38E92200EC2BFD /* AugustusTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3FE17BDC1B38E92200EC2BFD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3FE17BC71B38E92200EC2BFD /* Augustus */;
+			targetProxy = 3FE17BDB1B38E92200EC2BFD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3FE17BD31B38E92200EC2BFD /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3FE17BD41B38E92200EC2BFD /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3FE17BE21B38E92200EC2BFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3FE17BE31B38E92200EC2BFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		3FE17BE51B38E92200EC2BFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Augustus/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3FE17BE61B38E92200EC2BFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Augustus/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3FE17BE81B38E92200EC2BFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AugustusTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Augustus.app/Contents/MacOS/Augustus";
+			};
+			name = Debug;
+		};
+		3FE17BE91B38E92200EC2BFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AugustusTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Augustus.app/Contents/MacOS/Augustus";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3FE17BC31B38E92200EC2BFD /* Build configuration list for PBXProject "Augustus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FE17BE21B38E92200EC2BFD /* Debug */,
+				3FE17BE31B38E92200EC2BFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3FE17BE41B38E92200EC2BFD /* Build configuration list for PBXNativeTarget "Augustus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FE17BE51B38E92200EC2BFD /* Debug */,
+				3FE17BE61B38E92200EC2BFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3FE17BE71B38E92200EC2BFD /* Build configuration list for PBXNativeTarget "AugustusTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FE17BE81B38E92200EC2BFD /* Debug */,
+				3FE17BE91B38E92200EC2BFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3FE17BC01B38E92200EC2BFD /* Project object */;
+}
