@@ -100,5 +100,9 @@ struct AUCalendarInMemory: AUCalendar {
         }
         return dateEvents
     }
+    
+    mutating func clear() {
+        dateEventDictionary.removeAll()
+    }
 }
 
