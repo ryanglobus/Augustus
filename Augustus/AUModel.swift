@@ -43,6 +43,12 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
         }
         return dates
     }
+    
+    subscript(index: Int) -> NSDate {
+        get {
+            return self.dates()[index] // TODO make more efficient
+        }
+    }
 }
 
 protocol AUCalendar {
