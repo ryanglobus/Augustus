@@ -8,8 +8,12 @@
 
 import Foundation
 
-let calendar = NSCalendar.currentCalendar()
-let oneDay: NSTimeInterval = 60 * 60 * 24
+struct AUModel {
+    static let calendar = NSCalendar.currentCalendar()
+    static let oneDay: NSTimeInterval = 60 * 60 * 24
+}
+
+
 
 struct AUEvent {
     let id: String
@@ -25,21 +29,22 @@ struct AUEvent {
 
 struct AUWeek { // TODO let user choose start on Sunday/Monday
     let firstDate: NSDate
+    static let numDaysInWeek = 7
     
     init(containingDate date: NSDate) {
         var firstDate = date
-        while calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: firstDate) != calendar.firstWeekday { // TODO deprecated?
-            firstDate = firstDate.dateByAddingTimeInterval(-1 * oneDay)
+        while AUModel.calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: firstDate) != AUModel.calendar.firstWeekday {
+            firstDate = firstDate.dateByAddingTimeInterval(-1 * AUModel.oneDay)
         }
         self.firstDate = firstDate
     }
     
     func dates() -> [NSDate] {
         var dates: [NSDate] = [firstDate]
-        var date = firstDate.dateByAddingTimeInterval(oneDay)
-        while calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: date) != calendar.firstWeekday { // TODO deprecated?
+        var date = firstDate.dateByAddingTimeInterval(AUModel.oneDay)
+        while AUModel.calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: date) != AUModel.calendar.firstWeekday {
             dates.append(date)
-            date = date.dateByAddingTimeInterval(oneDay)
+            date = date.dateByAddingTimeInterval(AUModel.oneDay)
         }
         return dates
     }
