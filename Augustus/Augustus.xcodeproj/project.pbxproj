@@ -14,6 +14,7 @@
 		3FE17BE11B38E92200EC2BFD /* AugustusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BE01B38E92200EC2BFD /* AugustusTests.swift */; };
 		3FE17BEE1B38EA2200EC2BFD /* AUModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BED1B38EA2200EC2BFD /* AUModel.swift */; };
 		3FE17BEF1B38EA2200EC2BFD /* AUModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BED1B38EA2200EC2BFD /* AUModel.swift */; };
+		3FF9ED231B5C38710019328E /* AUDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF9ED221B5C38710019328E /* AUDateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		3FE17BDF1B38E92200EC2BFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3FE17BE01B38E92200EC2BFD /* AugustusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AugustusTests.swift; sourceTree = "<group>"; };
 		3FE17BED1B38EA2200EC2BFD /* AUModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUModel.swift; sourceTree = "<group>"; };
+		3FF9ED221B5C38710019328E /* AUDateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUDateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 		3FE17BCA1B38E92200EC2BFD /* Augustus */ = {
 			isa = PBXGroup;
 			children = (
+				3FF9ED1D1B5C33B10019328E /* Views */,
 				3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */,
 				3FE17BCF1B38E92200EC2BFD /* ViewController.swift */,
 				3FE17BD11B38E92200EC2BFD /* Images.xcassets */,
@@ -111,6 +114,14 @@
 				3FE17BDF1B38E92200EC2BFD /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3FF9ED1D1B5C33B10019328E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3FF9ED221B5C38710019328E /* AUDateView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,6 +225,7 @@
 			files = (
 				3FE17BD01B38E92200EC2BFD /* ViewController.swift in Sources */,
 				3FE17BEE1B38EA2200EC2BFD /* AUModel.swift in Sources */,
+				3FF9ED231B5C38710019328E /* AUDateView.swift in Sources */,
 				3FE17BCE1B38E92200EC2BFD /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
