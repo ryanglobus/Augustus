@@ -73,7 +73,7 @@ struct AUCalendarInMemory: AUCalendar {
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()
     
      mutating func addEvent(event: AUEvent) -> Bool { // TODO don't add if already there
-        let date = event.date
+        let date = AUCalendarInMemory.beginningOfDate(event.date)
         if var events = dateEventDictionary[date] {
             events.append(event)
             dateEventDictionary.updateValue(events, forKey: date)
@@ -96,7 +96,8 @@ struct AUCalendarInMemory: AUCalendar {
         return false
     }
     
-    func eventsForDate(date: NSDate) -> [AUEvent] {
+    func eventsForDate(var date: NSDate) -> [AUEvent] {
+        date = AUCalendarInMemory.beginningOfDate(date)
         if let events = dateEventDictionary[date] {
             return events
         } else {
@@ -114,6 +115,11 @@ struct AUCalendarInMemory: AUCalendar {
     
     mutating func clear() {
         dateEventDictionary.removeAll()
+    }
+    
+    private static func beginningOfDate(date: NSDate) -> NSDate {
+        let components = AUModel.calendar.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate: date)
+        return AUModel.calendar.dateFromComponents(components)!
     }
 }
 
