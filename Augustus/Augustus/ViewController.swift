@@ -25,15 +25,16 @@ class ViewController: NSViewController {
     
     private func addDateViews() {
         let frameHeight = self.view.frame.height
-        let subViewHeight = AUDateView.size.height
+        let subViewHeight = AUDateViewLabel.size.height
         let today = NSDate()
         let week = AUWeek(containingDate: today)
         var i = 0
         for date in week.dates() {
-            let y = Double(frameHeight) - Double(subViewHeight) * Double(i + 1)
-            println(y)
-            let origin = CGPoint(x: 0, y: y)
-            self.view.addSubview(AUDateView(date: date, origin: origin))
+//            let y = Double(frameHeight) - Double(subViewHeight) * Double(i + 1)
+            let y = Double(frameHeight - AUDateViewLabel.size.height)
+            let x = Double(AUDateViewLabel.size.width) * Double(i)
+            let origin = CGPoint(x: x, y: y)
+            self.view.addSubview(AUDateViewLabel(date: date, origin: origin))
             i++
         }
     }
