@@ -12,7 +12,7 @@ import AppKit
 class AUDateViewLabel: NSView {
     
     let date: NSDate
-    static let size = CGSize(width: 100, height: 50)
+    static let size = CGSize(width: AUDateView.width, height: 50)
     
     init(date: NSDate, origin: CGPoint) {
         let frame = NSRect(origin: origin, size: AUDateViewLabel.size)

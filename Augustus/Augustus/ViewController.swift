@@ -9,11 +9,14 @@
 import Cocoa
 
 class ViewController: NSViewController {
+    
+    var calendar: AUCalendar = AUCalendarInMemory()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        self.calendar.addEvent(AUEvent(description: "Today is a great day!", date: NSDate()))
         addDateViews()
     }
 
@@ -25,16 +28,17 @@ class ViewController: NSViewController {
     
     private func addDateViews() {
         let frameHeight = self.view.frame.height
-        let subViewHeight = AUDateViewLabel.size.height
+//        let subViewHeight = AUDateViewLabel.size.height
         let today = NSDate()
         let week = AUWeek(containingDate: today)
         var i = 0
         for date in week.dates() {
 //            let y = Double(frameHeight) - Double(subViewHeight) * Double(i + 1)
-            let y = Double(frameHeight - AUDateViewLabel.size.height)
+            let y = 0.0
             let x = Double(AUDateViewLabel.size.width) * Double(i)
             let origin = CGPoint(x: x, y: y)
-            self.view.addSubview(AUDateViewLabel(date: date, origin: origin))
+            let events = self.calendar.eventsForDate(date)
+            self.view.addSubview(AUDateView(date: date, events: events, origin: origin))
             i++
         }
     }
