@@ -25,6 +25,7 @@ class AUDateView: NSView {
         super.init(frame: frame)
         
         self.addSubview(viewLabel)
+        self.addFooter()
     }
     
     required init?(coder: NSCoder) {
@@ -68,6 +69,16 @@ class AUDateView: NSView {
         path.lineToPoint(NSPoint(x: AUDateView.size.width, y: 450))
         path.lineWidth = 2
         path.stroke()
+    }
+    
+    private func addFooter() {
+        let width: Double = 40
+        let x = (Double(AUDateView.size.width) - width) / 2.0
+        let addButtonFrame = NSRect(x: x, y: 0.0, width: width, height: 50)
+        let addButton = NSButton(frame: addButtonFrame)
+        addButton.bezelStyle = NSBezelStyle.RoundedBezelStyle
+        addButton.title = "+"
+        self.addSubview(addButton)
     }
     
 }
