@@ -31,6 +31,10 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     let firstDate: NSDate
     static let numDaysInWeek = 7
     
+    init() {
+        self.init(containingDate: NSDate())
+    }
+    
     init(containingDate date: NSDate) {
         var firstDate = date
         while AUModel.calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: firstDate) != AUModel.calendar.firstWeekday {
@@ -47,6 +51,12 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
             date = date.dateByAddingTimeInterval(AUModel.oneDay)
         }
         return dates
+    }
+    
+    func plusNumWeeks(numWeeks: Int) -> AUWeek {
+        let numDays = Double(numWeeks * AUWeek.numDaysInWeek)
+        let date = self.firstDate.dateByAddingTimeInterval(AUModel.oneDay * numDays)
+        return AUWeek(containingDate: date)
     }
     
     subscript(index: Int) -> NSDate {

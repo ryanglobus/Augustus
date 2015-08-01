@@ -8,14 +8,25 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, NSWindowDelegate {
     
     var calendar: AUCalendar = AUCalendarInMemory()
+    var dateViews: [AUDateView] = []
+    var week: AUWeek = AUWeek() {
+        didSet {
+            for i in 0..<AUWeek.numDaysInWeek {
+                dateViews[i].date = week[i]
+            }
+        }
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        var window = NSApplication.sharedApplication().windows[0] as? NSWindow
+        window?.delegate = self;
         self.calendar.addEvent(AUEvent(description: "Today is a great day!", date: NSDate()))
         self.calendar.addEvent(AUEvent(description: "Get ready for tomorrow", date: NSDate()))
         self.addDateViews()
@@ -27,13 +38,26 @@ class ViewController: NSViewController {
         }
     }
     
+    @IBAction
+    func previousWeek(sender: AnyObject?) {
+        self.week = week.plusNumWeeks(-1)
+    }
+    
+    @IBAction
+    func nextWeek(sender: AnyObject?) {
+        self.week = week.plusNumWeeks(1)
+    }
+    
+    @IBAction
+    func todaysWeek(sender: AnyObject?) {
+        self.week = AUWeek()
+    }
+    
     private func addDateViews() {
         let frameHeight = self.view.frame.height
 //        let subViewHeight = AUDateViewLabel.size.height
-        let today = NSDate()
-        let week = AUWeek(containingDate: today)
         var i = 0
-        let dates = week.dates()
+        let dates = self.week.dates()
         for date in dates {
 //            let y = Double(frameHeight) - Double(subViewHeight) * Double(i + 1)
             let y = 0.0
@@ -44,6 +68,7 @@ class ViewController: NSViewController {
             let view = AUDateView(date: date, origin: origin, withRightBorder: withRightBorder)
             self.view.addSubview(view)
             view.addEvents(events)
+            self.dateViews.append(view)
             i++
         }
     }

@@ -15,10 +15,17 @@ class AUDateView: NSView {
     
     var yOfLastEvent = AUDateView.size.height - AUDateViewLabel.size.height
     let withRightBorder: Bool
-    let date: NSDate
+    let viewLabel: AUDateViewLabel
+    var date: NSDate {
+        didSet {
+            viewLabel.date = self.date
+            viewLabel.needsDisplay = true
+            // TODO reset events
+        }
+    }
 
     
-    let viewLabel: AUDateViewLabel
+    
     
     init(date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
         self.date = date
