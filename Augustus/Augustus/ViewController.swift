@@ -17,6 +17,7 @@ class ViewController: NSViewController {
 
         // Do any additional setup after loading the view.
         self.calendar.addEvent(AUEvent(description: "Today is a great day!", date: NSDate()))
+        self.calendar.addEvent(AUEvent(description: "Get ready for tomorrow", date: NSDate()))
         addDateViews()
     }
 
@@ -38,7 +39,9 @@ class ViewController: NSViewController {
             let x = Double(AUDateViewLabel.size.width) * Double(i)
             let origin = CGPoint(x: x, y: y)
             let events = self.calendar.eventsForDate(date)
-            self.view.addSubview(AUDateView(date: date, events: events, origin: origin))
+            let view = AUDateView(date: date, origin: origin)
+            self.view.addSubview(view)
+            view.addEvents(events)
             i++
         }
     }
