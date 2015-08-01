@@ -15,7 +15,10 @@ class ViewController: NSViewController, NSWindowDelegate {
     var week: AUWeek = AUWeek() {
         didSet {
             for i in 0..<AUWeek.numDaysInWeek {
-                dateViews[i].date = week[i]
+                let date = week[i]
+                let view = dateViews[i]
+                view.date = date
+                view.events = calendar.eventsForDate(date)
             }
         }
     }
@@ -53,21 +56,18 @@ class ViewController: NSViewController, NSWindowDelegate {
         self.week = AUWeek()
     }
     
-    private func addDateViews() {
+    private func addDateViews() { // dup code here?
         let frameHeight = self.view.frame.height
-//        let subViewHeight = AUDateViewLabel.size.height
         var i = 0
         let dates = self.week.dates()
         for date in dates {
-//            let y = Double(frameHeight) - Double(subViewHeight) * Double(i + 1)
-            let y = 0.0
             let x = Double(AUDateViewLabel.size.width) * Double(i)
-            let origin = CGPoint(x: x, y: y)
+            let origin = CGPoint(x: x, y: 0)
             let events = self.calendar.eventsForDate(date)
             let withRightBorder = (i != dates.count - 1)
             let view = AUDateView(date: date, origin: origin, withRightBorder: withRightBorder)
             self.view.addSubview(view)
-            view.addEvents(events)
+            view.events = events
             self.dateViews.append(view)
             i++
         }

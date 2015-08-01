@@ -13,18 +13,46 @@ class AUDateView: NSView {
     // TODO 450 const in multiple places
     static let size = CGSize(width: AUDateView.width, height: AUDateViewLabel.size.height + 450)
     
-    var yOfLastEvent = AUDateView.size.height - AUDateViewLabel.size.height
     let withRightBorder: Bool
     let viewLabel: AUDateViewLabel
+    
     var date: NSDate {
         didSet {
             viewLabel.date = self.date
             viewLabel.needsDisplay = true
-            // TODO reset events
         }
     }
-
     
+    var events: [AUEvent] = [] {
+        didSet {
+            self.eventViews = events.map({ (event) -> NSView in
+                // TODO fix height constraint
+                let frame = NSRect(x: 0, y: 0, width: AUDateView.size.width, height: 50)
+                let eventField = NSTextField(frame: frame)
+                eventField.font = NSFont.systemFontOfSize(18)
+                eventField.stringValue = event.description
+                eventField.editable = false
+                eventField.bezeled = false
+                eventField.drawsBackground = false
+                eventField.selectable = true // TODO not working
+                return eventField
+            })
+        }
+    }
+    
+    private var eventViews: [NSView] = [] {
+        didSet(oldEventViews) {
+            for oldView in oldEventViews {
+                oldView.removeFromSuperview()
+            }
+            var y = AUDateView.size.height - AUDateViewLabel.size.height
+            for view in self.eventViews {
+                y -= view.frame.size.height + 5 // 5 for margin
+                view.frame.origin.y = y
+                self.addSubview(view)
+            }
+        }
+    }
     
     
     init(date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
@@ -36,7 +64,6 @@ class AUDateView: NSView {
         super.init(frame: frame)
         
         self.addSubview(viewLabel)
-//        self.addFooter()
     }
     
     required init?(coder: NSCoder) {
@@ -48,32 +75,9 @@ class AUDateView: NSView {
         if self.withRightBorder {
             self.drawBorders()
         }
-//        self.viewEvents.drawRect(dirtyRect) // TODO this is definitely wrong
     }
-    
-    // TODO remove
-    // TODO edit
     // TODO scroll
-    func addEvents(events: [AUEvent]) {
-        for event in events {
-//            self.events.append(event)
-            // TODO fix height constant
-            let eventFrame = NSRect(x: 0, y: self.yOfLastEvent, width: AUDateView.size.width, height: 50)
-            let eventField = NSTextField(frame: eventFrame)
-            eventField.font = NSFont.systemFontOfSize(18)
-            //            eventField.backgroundColor = NSColor(calibratedWhite: 0, alpha: 0)
-            eventField.stringValue = event.description
-            eventField.editable = false
-            eventField.bezeled = false
-            eventField.drawsBackground = false
-            eventField.selectable = true // TODO not working
-            
-            eventField.frame.origin.y -= eventField.frame.size.height
-            self.yOfLastEvent = eventField.frame.origin.y
-            self.addSubview(eventField)
-        }
-//        self.needsDisplay = true // TODO ???
-    }
+
     
     private func drawBorders() {
         let path = NSBezierPath()
