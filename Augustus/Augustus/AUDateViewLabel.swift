@@ -43,8 +43,6 @@ class AUDateViewLabel: NSView {
         // border below
         path.moveToPoint(NSPoint(x: 0, y: 0))
         path.lineToPoint(NSPoint(x: AUDateViewLabel.size.width, y: 0))
-        // border to the right
-        path.lineToPoint(NSPoint(x: AUDateViewLabel.size.width, y: AUDateViewLabel.size.height))
         path.lineWidth = 2
         path.stroke()
     }

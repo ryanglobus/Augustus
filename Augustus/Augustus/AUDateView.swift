@@ -9,23 +9,27 @@
 import Cocoa
 
 class AUDateView: NSView {
-    
     static let width = CGFloat(150)
     // TODO 450 const in multiple places
     static let size = CGSize(width: AUDateView.width, height: AUDateViewLabel.size.height + 450)
+    
     var yOfLastEvent = AUDateView.size.height - AUDateViewLabel.size.height
+    let withRightBorder: Bool
+    let date: NSDate
 
     
     let viewLabel: AUDateViewLabel
     
-    init(date: NSDate, origin: CGPoint) {
+    init(date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
+        self.date = date
         self.viewLabel = AUDateViewLabel(date: date, origin: CGPoint(x: 0, y: 450))
+        self.withRightBorder = withRightBorder
         
         let frame = NSRect(origin: origin, size: AUDateView.size)
         super.init(frame: frame)
         
         self.addSubview(viewLabel)
-        self.addFooter()
+//        self.addFooter()
     }
     
     required init?(coder: NSCoder) {
@@ -34,7 +38,9 @@ class AUDateView: NSView {
 
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
-        self.drawBorders()
+        if self.withRightBorder {
+            self.drawBorders()
+        }
 //        self.viewEvents.drawRect(dirtyRect) // TODO this is definitely wrong
     }
     
@@ -69,16 +75,6 @@ class AUDateView: NSView {
         path.lineToPoint(NSPoint(x: AUDateView.size.width, y: 450))
         path.lineWidth = 2
         path.stroke()
-    }
-    
-    private func addFooter() {
-        let width: Double = 40
-        let x = (Double(AUDateView.size.width) - width) / 2.0
-        let addButtonFrame = NSRect(x: x, y: 0.0, width: width, height: 50)
-        let addButton = NSButton(frame: addButtonFrame)
-        addButton.bezelStyle = NSBezelStyle.RoundedBezelStyle
-        addButton.title = "+"
-        self.addSubview(addButton)
     }
     
 }
