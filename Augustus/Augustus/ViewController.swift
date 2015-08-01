@@ -14,6 +14,7 @@ class ViewController: NSViewController, NSWindowDelegate {
     var dateViews: [AUDateView] = []
     var week: AUWeek = AUWeek() {
         didSet {
+            self.drawMonthYearLabel()
             for i in 0..<AUWeek.numDaysInWeek {
                 let date = week[i]
                 let view = dateViews[i]
@@ -33,6 +34,10 @@ class ViewController: NSViewController, NSWindowDelegate {
         self.calendar.addEvent(AUEvent(description: "Today is a great day!", date: NSDate()))
         self.calendar.addEvent(AUEvent(description: "Get ready for tomorrow", date: NSDate()))
         self.addDateViews()
+    }
+    
+    override func viewDidAppear() {
+        self.drawMonthYearLabel()
     }
 
     override var representedObject: AnyObject? {
@@ -70,6 +75,20 @@ class ViewController: NSViewController, NSWindowDelegate {
             view.events = events
             self.dateViews.append(view)
             i++
+        }
+    }
+    
+    private func drawMonthYearLabel() {
+        if let items = self.view.window?.toolbar?.items {
+            for item in items {
+                if let textField = (item as? NSToolbarItem)?.view as? NSTextField {
+                    if "toolbar-month-year-label" == textField.identifier {
+                        let df = NSDateFormatter()
+                        df.dateFormat = "MMMM yyyy"
+                        textField.stringValue = df.stringFromDate(week.firstDate)
+                    }
+                }
+            }
         }
     }
 
