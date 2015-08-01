@@ -50,15 +50,21 @@ class AUDateViewLabel: NSView {
     }
     
     private func drawDayOfMonth() {
-        let dayOfMonth = AUModel.calendar.component(NSCalendarUnit.CalendarUnitDay, fromDate: self.date)
+        let dayOfMonth = AUModel.calendar.component(NSCalendarUnit.CalendarUnitDay, fromDate: self.date).description
         let dayOfMonthAttributes = [NSFontAttributeName: NSFont.boldSystemFontOfSize(20)]
-        dayOfMonth.description.drawAtPoint(CGPoint(x: 0, y: 0), withAttributes: dayOfMonthAttributes)
+        let dayOfMonthLabel = NSAttributedString(string: dayOfMonth, attributes: dayOfMonthAttributes)
+        let x = (AUDateViewLabel.size.width - dayOfMonthLabel.size.width) / 2.0
+        dayOfMonthLabel.drawAtPoint(CGPoint(x: x, y: 0))
     }
     
     private func drawDayOfWeek() {
-        let dayOfWeek = AUModel.calendar.component(NSCalendarUnit.CalendarUnitWeekday, fromDate: self.date)
-        let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
-        AUDateViewLabel.nameForDayOfWeek(dayOfWeek)?.drawAtPoint(CGPoint(x: 0, y: 25), withAttributes: dayOfWeekAttributes)
+        let dayOfWeekNumber = AUModel.calendar.component(NSCalendarUnit.CalendarUnitWeekday, fromDate: self.date)
+        if let dayOfWeek = AUDateViewLabel.nameForDayOfWeek(dayOfWeekNumber) {
+            let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
+            let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
+            let x = (AUDateViewLabel.size.width - dayOfWeekLabel.size.width) / 2.0
+            dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
+        }
     }
     
     private static func nameForDayOfWeek(dayOfWeek: Int) -> String? {
