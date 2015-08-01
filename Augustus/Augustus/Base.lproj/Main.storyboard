@@ -679,9 +679,9 @@
                                 <toolbarItem implicitItemIdentifier="E872A355-7777-4F96-8F7F-5D8AE0240267" label="" paletteLabel="" id="jHj-Za-LeA">
                                     <nil key="toolTip"/>
                                     <size key="minSize" width="25" height="25"/>
-                                    <size key="maxSize" width="116" height="25"/>
+                                    <size key="maxSize" width="25" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="aSP-em-bqf">
-                                        <rect key="frame" x="0.0" y="0.0" width="116" height="25"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="roundTextured" title="&lt;" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3d0-Kp-TWE">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -697,7 +697,7 @@
                                     <size key="minSize" width="25" height="25"/>
                                     <size key="maxSize" width="25" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="6FA-oC-X8k">
-                                        <rect key="frame" x="0.0" y="0.0" width="116" height="25"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="roundTextured" title="&gt;" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pxu-2y-HTh">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -713,7 +713,7 @@
                                     <size key="minSize" width="38" height="25"/>
                                     <size key="maxSize" width="150" height="25"/>
                                     <textField key="view" identifier="toolbar-month-year-label" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z6e-zl-2eU">
-                                        <rect key="frame" x="6" y="15" width="38" height="17"/>
+                                        <rect key="frame" x="6" y="15" width="38" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="uf2-sW-KHg">
                                             <font key="font" metaFont="system" size="20"/>
@@ -722,9 +722,23 @@
                                         </textFieldCell>
                                     </textField>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="54B9B318-B228-44A6-9D36-CEB928C82342" explicitItemIdentifier="add-event-button" label="" paletteLabel="" id="4cr-85-O2B">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="25" height="25"/>
+                                    <size key="maxSize" width="25" height="25"/>
+                                    <button key="view" verticalHuggingPriority="750" id="bnF-sw-QF0">
+                                        <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" title="+" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oAN-3Q-Zlb">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="959-e7-6fh"/>
+                                <toolbarItem reference="4cr-85-O2B"/>
                                 <toolbarItem reference="8hu-Ar-VyK"/>
                                 <toolbarItem reference="jHj-Za-LeA"/>
                                 <toolbarItem reference="NtJ-AL-rTc"/>
