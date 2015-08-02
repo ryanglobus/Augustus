@@ -715,7 +715,7 @@
                                     <textField key="view" identifier="toolbar-month-year-label" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z6e-zl-2eU">
                                         <rect key="frame" x="6" y="15" width="38" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="uf2-sW-KHg">
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="uf2-sW-KHg">
                                             <font key="font" metaFont="system" size="20"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -729,9 +729,9 @@
                                     <button key="view" verticalHuggingPriority="750" id="bnF-sw-QF0">
                                         <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="roundTextured" title="+" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oAN-3Q-Zlb">
+                                        <buttonCell key="cell" type="roundTextured" title="+" bezelStyle="texturedRounded" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oAN-3Q-Zlb">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
+                                            <font key="font" metaFont="system" size="18"/>
                                         </buttonCell>
                                     </button>
                                     <connections>
@@ -740,8 +740,13 @@
                                 </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
-                                <toolbarItem reference="959-e7-6fh"/>
                                 <toolbarItem reference="4cr-85-O2B"/>
+                                <toolbarItem reference="8hu-Ar-VyK"/>
+                                <toolbarItem reference="FdF-Dp-Jap"/>
+                                <toolbarItem reference="FdF-Dp-Jap"/>
+                                <toolbarItem reference="FdF-Dp-Jap"/>
+                                <toolbarItem reference="FdF-Dp-Jap"/>
+                                <toolbarItem reference="959-e7-6fh"/>
                                 <toolbarItem reference="8hu-Ar-VyK"/>
                                 <toolbarItem reference="jHj-Za-LeA"/>
                                 <toolbarItem reference="NtJ-AL-rTc"/>

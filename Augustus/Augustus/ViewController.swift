@@ -57,6 +57,7 @@ class ViewController: NSViewController, NSWindowDelegate {
 //                }
             }
         }
+        self.view.window?.titleVisibility = .Hidden
         self.popoverViewController = PopoverViewController.newInstance()
     }
 
