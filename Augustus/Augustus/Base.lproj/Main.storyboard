@@ -711,7 +711,7 @@
                                 <toolbarItem implicitItemIdentifier="7E9D41C3-7507-4616-ADD7-155D61A42C21" explicitItemIdentifier="toolbar-month-year-label" label="" paletteLabel="" id="959-e7-6fh">
                                     <nil key="toolTip"/>
                                     <size key="minSize" width="38" height="25"/>
-                                    <size key="maxSize" width="150" height="25"/>
+                                    <size key="maxSize" width="160" height="25"/>
                                     <textField key="view" identifier="toolbar-month-year-label" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z6e-zl-2eU">
                                         <rect key="frame" x="6" y="15" width="38" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
