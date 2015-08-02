@@ -13,6 +13,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     @IBOutlet weak var eventDescriptionField: NSTextField?
     @IBOutlet weak var datePicker: NSDatePicker?
     var popover: NSPopover? = nil // TODO hack
+    @IBOutlet weak var addEventButton: NSButton?
 
     static func newInstance() -> PopoverViewController? { // TODO hack
         let pvc = PopoverViewController(nibName: "PopoverViewController", bundle: NSBundle(identifier: "Augustus"))
@@ -28,6 +29,9 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     
     override func viewWillAppear() {
         self.view.window?.makeFirstResponder(self.eventDescriptionField)
+        if let addEventButtonCell = self.addEventButton?.cell() as? NSButtonCell {
+            self.view.window?.setDefaultButtonCell(addEventButtonCell)
+        }
     }
     
     @IBAction func addEvent(sender: AnyObject) {
@@ -39,9 +43,14 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
                 }
             }
         }
-        self.popover?.performClose(self)
+        self.close(sender)
         // TODO close popover on click too
     }
+    
+    @IBAction func close(sender: AnyObject) {
+        self.popover?.performClose(self)
+    }
+    
     
     func setDate(date: NSDate) {
         datePicker?.dateValue = date
