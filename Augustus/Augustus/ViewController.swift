@@ -11,15 +11,12 @@ import Cocoa
 class ViewController: NSViewController, NSWindowDelegate {
     
     var dateViews: [AUDateView] = []
+    var monthYearLabel: NSTextField?
+    var popoverViewController: PopoverViewController?
+//    var addEventButton: NSButton?
     var week: AUWeek = AUWeek() {
         didSet {
-            self.drawMonthYearLabel()
-            for i in 0..<AUWeek.numDaysInWeek {
-                let date = week[i]
-                let view = dateViews[i]
-                view.date = date
-                view.events = calendar.eventsForDate(date)
-            }
+            self.refresh()
         }
     }
     
@@ -29,14 +26,38 @@ class ViewController: NSViewController, NSWindowDelegate {
 
         // Do any additional setup after loading the view.
         var window = NSApplication.sharedApplication().windows[0] as? NSWindow
-        window?.delegate = self;
+        window?.delegate = self
+//        self.view.window?.delegate = self; TODO or this?
+        
         AUModel.eventStore.addEventOnDate(NSDate(), description: "Today is a great day!")
         AUModel.eventStore.addEventOnDate(NSDate(), description: "Get ready for tomorrow")
         self.addDateViews()
+        // TODO make below queue proper UI queue
+        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) -> Void in
+                self.refresh()
+            })
     }
     
-    override func viewDidAppear() {
-        self.drawMonthYearLabel()
+    override func viewWillAppear() {
+        // TODO use IBOutlet
+        // get toolbar outlets
+        if let items = self.view.window?.toolbar?.items {
+            for item in items {
+                let view = (item as? NSToolbarItem)?.view
+                if let textField = view as? NSTextField {
+                    if "toolbar-month-year-label" == textField.identifier {
+                        self.monthYearLabel = textField
+                        self.drawMonthYearLabel()
+                    }
+                }
+//                if let button = view as? NSButton {
+//                    if "add-event-button" == button.identifier {
+//                        self.addEventButton = button
+//                    }
+//                }
+            }
+        }
+        self.popoverViewController = PopoverViewController.newInstance()
     }
 
     override var representedObject: AnyObject? {
@@ -60,6 +81,15 @@ class ViewController: NSViewController, NSWindowDelegate {
         self.week = AUWeek()
     }
     
+    @IBAction
+    func addEventButton(sender: AnyObject?) {
+        if let view = sender as? NSView {
+            // must show first for NSDatePicker to be created for setDate:
+            self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSMaxYEdge)
+            self.popoverViewController?.setDate(self.week.firstDate)
+        }
+    }
+    
     private func addDateViews() { // dup code here?
         let frameHeight = self.view.frame.height
         var i = 0
@@ -78,16 +108,18 @@ class ViewController: NSViewController, NSWindowDelegate {
     }
     
     private func drawMonthYearLabel() {
-        if let items = self.view.window?.toolbar?.items {
-            for item in items {
-                if let textField = (item as? NSToolbarItem)?.view as? NSTextField {
-                    if "toolbar-month-year-label" == textField.identifier {
-                        let df = NSDateFormatter()
-                        df.dateFormat = "MMMM yyyy"
-                        textField.stringValue = df.stringFromDate(week.firstDate)
-                    }
-                }
-            }
+        let df = NSDateFormatter()
+        df.dateFormat = "MMMM yyyy"
+        self.monthYearLabel?.stringValue = df.stringFromDate(week.firstDate)
+    }
+    
+    private func refresh() {
+        self.drawMonthYearLabel()
+        for i in 0..<AUWeek.numDaysInWeek {
+            let date = week[i]
+            let view = dateViews[i]
+            view.date = date
+            view.events = AUModel.eventStore.eventsForDate(date)
         }
     }
 
