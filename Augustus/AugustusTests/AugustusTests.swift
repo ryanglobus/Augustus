@@ -17,15 +17,13 @@ private let secondDayOfWeek = thisWeek[1]
 
 class AugustusTests: XCTestCase {
     
-    private var calendar = AUCalendarInMemory()
+    private var calendar = AUEventStoreInMemory() // TODO rename
     
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        let event = AUEvent(description: "10pm Al Dentist", date: firstDayOfWeek)
-        let event2 = AUEvent(description: "R Hong Kong", date: secondDayOfWeek)
-        calendar.addEvent(event)
-        calendar.addEvent(event2)
+        calendar.addEventOnDate(firstDayOfWeek, description: "10pm Al Dentist")
+        calendar.addEventOnDate(secondDayOfWeek, description: "R Hong Kong")
     }
     
     override func tearDown() {

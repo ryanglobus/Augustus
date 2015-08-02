@@ -10,7 +10,6 @@ import Cocoa
 
 class ViewController: NSViewController, NSWindowDelegate {
     
-    var calendar: AUCalendar = AUCalendarInMemory()
     var dateViews: [AUDateView] = []
     var week: AUWeek = AUWeek() {
         didSet {
@@ -31,8 +30,8 @@ class ViewController: NSViewController, NSWindowDelegate {
         // Do any additional setup after loading the view.
         var window = NSApplication.sharedApplication().windows[0] as? NSWindow
         window?.delegate = self;
-        self.calendar.addEvent(AUEvent(description: "Today is a great day!", date: NSDate()))
-        self.calendar.addEvent(AUEvent(description: "Get ready for tomorrow", date: NSDate()))
+        AUModel.eventStore.addEventOnDate(NSDate(), description: "Today is a great day!")
+        AUModel.eventStore.addEventOnDate(NSDate(), description: "Get ready for tomorrow")
         self.addDateViews()
     }
     
@@ -68,7 +67,7 @@ class ViewController: NSViewController, NSWindowDelegate {
         for date in dates {
             let x = Double(AUDateViewLabel.size.width) * Double(i)
             let origin = CGPoint(x: x, y: 0)
-            let events = self.calendar.eventsForDate(date)
+            let events = AUModel.eventStore.eventsForDate(date)
             let withRightBorder = (i != dates.count - 1)
             let view = AUDateView(date: date, origin: origin, withRightBorder: withRightBorder)
             self.view.addSubview(view)

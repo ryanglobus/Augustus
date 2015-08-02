@@ -11,20 +11,16 @@ import Foundation
 struct AUModel {
     static let calendar = NSCalendar.currentCalendar()
     static let oneDay: NSTimeInterval = 60 * 60 * 24
+    static let notificationName = "AUModelNotification"
+    static var eventStore: AUEventStore = AUEventStoreInMemory()
 }
 
 
 
-struct AUEvent {
-    let id: String
-    let description: String
-    let date: NSDate
-    
-    init(description: String, date: NSDate) {
-        self.id = NSUUID().UUIDString
-        self.description = description
-        self.date = date
-    }
+protocol AUEvent {
+    var id: String { get }
+    var description: String { get }
+    var date: NSDate { get }
 }
 
 struct AUWeek { // TODO let user choose start on Sunday/Monday
@@ -66,9 +62,9 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     }
 }
 
-protocol AUCalendar {
+protocol AUEventStore {
     /// returns true upon success, false upon failure
-    mutating func addEvent(event: AUEvent) -> Bool
+    mutating func addEventOnDate(date: NSDate, description: String) -> Bool
     
     /// returns true if an event is removed, false upon failure or if no event is removed
     mutating func removeEvent(event: AUEvent) -> Bool
@@ -79,11 +75,18 @@ protocol AUCalendar {
 }
 
 
-struct AUCalendarInMemory: AUCalendar {
+struct AUEventStoreInMemory: AUEventStore {
+    private struct AUEventInMemory: AUEvent {
+        let id: String
+        let description: String
+        let date: NSDate
+    }
+    
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()
     
-     mutating func addEvent(event: AUEvent) -> Bool { // TODO don't add if already there
-        let date = AUCalendarInMemory.beginningOfDate(event.date)
+    mutating func addEventOnDate(date: NSDate, description: String) -> Bool {
+        let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date)
+        let date = AUEventStoreInMemory.beginningOfDate(event.date)
         if var events = dateEventDictionary[date] {
             events.append(event)
             dateEventDictionary.updateValue(events, forKey: date)
@@ -107,7 +110,7 @@ struct AUCalendarInMemory: AUCalendar {
     }
     
     func eventsForDate(var date: NSDate) -> [AUEvent] {
-        date = AUCalendarInMemory.beginningOfDate(date)
+        date = AUEventStoreInMemory.beginningOfDate(date)
         if let events = dateEventDictionary[date] {
             return events
         } else {
