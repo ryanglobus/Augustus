@@ -74,12 +74,12 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
         self.selectedEventField = eventField
     }
     
-    func requestEdit(eventField: AUEventField) {
+    func requestEdit(eventField: AUEventField) { // TODO actually edit event
         self.select(eventField)
 
         let rect = NSRect(origin: CGPoint.zeroPoint, size: eventField.frame.size)
         self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSMaxXEdge)
-        self.popoverViewController?.setDate(eventField.eventValue.date)
+        self.popoverViewController?.eventDate = eventField.eventValue.date
         self.popoverViewController?.eventDescription = eventField.eventValue.description
     }
     
@@ -103,7 +103,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
         if let view = sender as? NSView {
             // must show first for NSDatePicker to be created for setDate:
             self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSMaxYEdge)
-            self.popoverViewController?.setDate(self.week.firstDate)
+            self.popoverViewController?.eventDate = self.week.firstDate
         }
     }
     
