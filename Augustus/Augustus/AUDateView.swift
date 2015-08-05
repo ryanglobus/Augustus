@@ -13,6 +13,7 @@ class AUDateView: NSView {
     // TODO 450 const in multiple places
     static let size = CGSize(width: AUDateView.width, height: AUDateViewLabel.size.height + 450)
     
+    let controller: ViewController
     let withRightBorder: Bool
     let viewLabel: AUDateViewLabel
     
@@ -28,13 +29,8 @@ class AUDateView: NSView {
             self.eventViews = events.map({ (event) -> NSView in
                 // TODO fix height constraint
                 let frame = NSRect(x: 0, y: 0, width: AUDateView.size.width, height: 50)
-                let eventField = NSTextField(frame: frame)
-                eventField.font = NSFont.systemFontOfSize(18)
-                eventField.stringValue = event.description
-                eventField.editable = false
-                eventField.bezeled = false
-                eventField.drawsBackground = false
-                eventField.selectable = true // TODO not working
+                let eventField = AUEventField(frame: frame, event: event)
+                eventField.auDelegate = self.controller
                 return eventField
             })
         }
@@ -55,7 +51,8 @@ class AUDateView: NSView {
     }
     
     
-    init(date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
+    init(controller: ViewController, date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
+        self.controller = controller
         self.date = date
         self.viewLabel = AUDateViewLabel(date: date, origin: CGPoint(x: 0, y: 450))
         self.withRightBorder = withRightBorder
@@ -88,4 +85,8 @@ class AUDateView: NSView {
         path.stroke()
     }
     
+}
+
+@objc protocol AUDateViewDelegate {
+    optional func requestNewEvent()
 }

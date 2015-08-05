@@ -10,6 +10,16 @@ import Cocoa
 
 class PopoverViewController: NSViewController, NSTextFieldDelegate {
 
+    
+    var eventDescription: String? {
+        get {
+            return self.eventDescriptionField?.stringValue
+        } set {
+            if let nval = newValue {
+                self.eventDescriptionField?.stringValue = nval
+            }
+        }
+    }
     @IBOutlet weak var eventDescriptionField: NSTextField?
     @IBOutlet weak var datePicker: NSDatePicker?
     var popover: NSPopover? = nil // TODO hack
@@ -52,7 +62,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     }
     
     
-    func setDate(date: NSDate) {
+    func setDate(date: NSDate) { // TODO make computed property
         datePicker?.dateValue = date
     }
 }

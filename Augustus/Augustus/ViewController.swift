@@ -8,11 +8,12 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NSWindowDelegate {
+class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
     
     var dateViews: [AUDateView] = []
     var monthYearLabel: NSTextField?
     var popoverViewController: PopoverViewController?
+    var selectedEventField: AUEventField?
 //    var addEventButton: NSButton?
     var week: AUWeek = AUWeek() {
         didSet {
@@ -67,6 +68,18 @@ class ViewController: NSViewController, NSWindowDelegate {
         }
     }
     
+    func select(eventField: AUEventField) {
+        self.selectedEventField?.selected = false
+        eventField.selected = true
+        self.selectedEventField = eventField
+        
+        // TODO move below to requestEdit
+//        let rect = NSRect(origin: CGPoint.zeroPoint, size: eventField.frame.size)
+//        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSMaxXEdge)
+//        self.popoverViewController?.setDate(eventField.eventValue.date)
+//        self.popoverViewController?.eventDescription = eventField.eventValue.description
+    }
+    
     @IBAction
     func previousWeek(sender: AnyObject?) {
         self.week = week.plusNumWeeks(-1)
@@ -100,7 +113,7 @@ class ViewController: NSViewController, NSWindowDelegate {
             let origin = CGPoint(x: x, y: 0)
             let events = AUModel.eventStore.eventsForDate(date)
             let withRightBorder = (i != dates.count - 1)
-            let view = AUDateView(date: date, origin: origin, withRightBorder: withRightBorder)
+            let view = AUDateView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
             self.view.addSubview(view)
             view.events = events
             self.dateViews.append(view)
