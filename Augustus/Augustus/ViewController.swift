@@ -72,12 +72,15 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
         self.selectedEventField?.selected = false
         eventField.selected = true
         self.selectedEventField = eventField
-        
-        // TODO move below to requestEdit
-//        let rect = NSRect(origin: CGPoint.zeroPoint, size: eventField.frame.size)
-//        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSMaxXEdge)
-//        self.popoverViewController?.setDate(eventField.eventValue.date)
-//        self.popoverViewController?.eventDescription = eventField.eventValue.description
+    }
+    
+    func requestEdit(eventField: AUEventField) {
+        self.select(eventField)
+
+        let rect = NSRect(origin: CGPoint.zeroPoint, size: eventField.frame.size)
+        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSMaxXEdge)
+        self.popoverViewController?.setDate(eventField.eventValue.date)
+        self.popoverViewController?.eventDescription = eventField.eventValue.description
     }
     
     @IBAction

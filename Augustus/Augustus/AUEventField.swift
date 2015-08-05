@@ -50,7 +50,11 @@ class AUEventField: NSTextField {
     }
 
     override func mouseDown(theEvent: NSEvent) { // or mouse up?
-        self.auDelegate?.select?(self)
+        if theEvent.clickCount == 2 {
+            self.auDelegate?.requestEdit?(self)
+        } else {
+            self.auDelegate?.select?(self)
+        }
     }
     
 }
@@ -58,5 +62,5 @@ class AUEventField: NSTextField {
 @objc protocol AUEventFieldDelegate : NSTextFieldDelegate {
     optional func select(eventField: AUEventField)
     
-    // TODO add requestEdit
+    optional func requestEdit(eventField: AUEventField)
 }
