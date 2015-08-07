@@ -29,8 +29,7 @@ class AUDateView: NSView {
         didSet {
             self.eventViews = events.map({ (event) -> NSView in
                 // TODO fix height constraint
-                let frame = NSRect(x: 0, y: 0, width: AUDateView.size.width, height: 50)
-                let eventField = AUEventField(frame: frame, event: event)
+                let eventField = AUEventField(origin: CGPoint.zeroPoint, width: AUDateView.size.width, event: event)
                 eventField.auDelegate = self.controller
                 return eventField
             })
@@ -78,6 +77,8 @@ class AUDateView: NSView {
     override func mouseDown(theEvent: NSEvent) {
         if theEvent.clickCount == 2 {
             self.auDelegate?.requestNewEventForDateView?(self)
+        } else {
+            self.auDelegate?.selectDateView?(self)
         }
     }
     
@@ -96,5 +97,7 @@ class AUDateView: NSView {
 }
 
 @objc protocol AUDateViewDelegate {
+    optional func selectDateView(dateView: AUDateView)
+    
     optional func requestNewEventForDateView(dateView: AUDateView)
 }

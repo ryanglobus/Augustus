@@ -75,6 +75,12 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.selectedEventField = eventField
     }
     
+    func selectDateView(dateView: AUDateView) {
+        self.unselect()
+        self.popoverViewController?.close(dateView)
+        self.popoverViewController?.date = dateView.date // TODO make this do something
+    }
+    
     func unselect() { // TODO better, call more often
         self.selectedEventField?.selected = false
         self.selectedEventField = nil
@@ -99,16 +105,19 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     
     @IBAction
     func previousWeek(sender: AnyObject?) {
+        self.unselect()
         self.week = week.plusNumWeeks(-1)
     }
     
     @IBAction
     func nextWeek(sender: AnyObject?) {
+        self.unselect()
         self.week = week.plusNumWeeks(1)
     }
     
     @IBAction
     func todaysWeek(sender: AnyObject?) {
+        self.unselect()
         self.week = AUWeek()
     }
     
