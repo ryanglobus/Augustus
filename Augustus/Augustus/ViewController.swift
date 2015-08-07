@@ -28,11 +28,11 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         // Do any additional setup after loading the view.
         var window = NSApplication.sharedApplication().windows[0] as? NSWindow
         window?.delegate = self
-//        self.view.window?.delegate = self; TODO or this?
         
         AUModel.eventStore.addEventOnDate(NSDate(), description: "Today is a great day!")
         AUModel.eventStore.addEventOnDate(NSDate(), description: "Get ready for tomorrow")
         self.addDateViews()
+        self.unselect()
         // TODO make below queue proper UI queue
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) -> Void in
                 self.refresh()
@@ -68,10 +68,16 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         }
     }
     
+    // TODO unselect when add event
     func select(eventField: AUEventField) {
         self.selectedEventField?.selected = false
         eventField.selected = true
         self.selectedEventField = eventField
+    }
+    
+    func unselect() { // TODO better, call more often
+        self.selectedEventField?.selected = false
+        self.selectedEventField = nil
     }
     
     func requestEdit(eventField: AUEventField) { // TODO actually edit event
@@ -115,6 +121,34 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             self.popoverViewController?.date = self.week.firstDate
         }
     }
+    
+    
+    
+    
+    // MENU ACTIONS
+    
+    func delete(sender: AnyObject?) {
+        if let event = self.selectedEventField?.eventValue {
+            AUModel.eventStore.removeEvent(event)
+            // TODO should notifications be in model itself?
+            NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+            self.unselect()
+        }
+    }
+    
+    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+        if menuItem.title == "Delete" {
+            return self.selectedEventField != nil
+        }
+        
+        return super.validateMenuItem(menuItem)
+    }
+    
+    
+    
+    
+    
+    
     
     private func addDateViews() { // dup code here?
         let frameHeight = self.view.frame.height
