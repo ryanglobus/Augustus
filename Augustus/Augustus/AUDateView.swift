@@ -77,7 +77,7 @@ class AUDateView: NSView {
     
     override func mouseDown(theEvent: NSEvent) {
         if theEvent.clickCount == 2 {
-            self.auDelegate?.requestNewEvent?(self)
+            self.auDelegate?.requestNewEventForDateView?(self)
         }
     }
     
@@ -96,5 +96,5 @@ class AUDateView: NSView {
 }
 
 @objc protocol AUDateViewDelegate {
-    optional func requestNewEvent(dateView: AUDateView)
+    optional func requestNewEventForDateView(dateView: AUDateView)
 }

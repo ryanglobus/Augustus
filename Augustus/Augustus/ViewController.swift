@@ -14,7 +14,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     var monthYearLabel: NSTextField?
     var popoverViewController: PopoverViewController?
     var selectedEventField: AUEventField?
-//    var addEventButton: NSButton?
+    var addEventButton: NSButton?
     var week: AUWeek = AUWeek() {
         didSet {
             self.refresh()
@@ -51,11 +51,11 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
                         self.drawMonthYearLabel()
                     }
                 }
-//                if let button = view as? NSButton {
-//                    if "add-event-button" == button.identifier {
-//                        self.addEventButton = button
-//                    }
-//                }
+                if let button = view as? NSButton {
+                    if "add-event-button" == button.identifier {
+                        self.addEventButton = button
+                    }
+                }
             }
         }
         self.view.window?.titleVisibility = .Hidden
@@ -88,7 +88,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.popoverViewController?.setModeToEdit(eventField.eventValue)
     }
     
-    func requestNewEvent(dateView: AUDateView) {
+    func requestNewEventForDateView(dateView: AUDateView) {
         // TODO unselect?
         let dateViewLabel = dateView.viewLabel
         let rect = NSRect(origin: CGPoint.zeroPoint, size: dateViewLabel.frame.size)
@@ -113,8 +113,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     }
     
     @IBAction
-    func addEventButton(sender: AnyObject?) {
-        if let view = sender as? NSView {
+    func requestNewEvent(sender: AnyObject?) {
+        if let view = self.addEventButton {
             // must show first for NSDatePicker to be created for setDate:
             self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSMaxYEdge)
             self.popoverViewController?.setModeToAdd()
@@ -127,6 +127,13 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     
     // MENU ACTIONS
     
+    @IBAction
+    func edit(sender: AnyObject?) {
+        if let eventField = self.selectedEventField {
+            self.requestEdit(eventField)
+        }
+    }
+    
     func delete(sender: AnyObject?) {
         if let event = self.selectedEventField?.eventValue {
             AUModel.eventStore.removeEvent(event)
@@ -137,11 +144,14 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     }
     
     override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
-        if menuItem.title == "Delete" {
+        switch menuItem.title {
+        case "New Event...":
+            return true
+        case "Edit Event...", "Delete":
             return self.selectedEventField != nil
+        default:
+            return super.validateMenuItem(menuItem)
         }
-        
-        return super.validateMenuItem(menuItem)
     }
     
     
