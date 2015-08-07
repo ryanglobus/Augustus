@@ -9,19 +9,12 @@
 import Cocoa
 
 class PopoverViewController: NSViewController, NSTextFieldDelegate {
-
     
-    var eventDescription: String? {
-        get {
-            return self.eventDescriptionField?.stringValue
-        } set {
-            if let nval = newValue {
-                self.eventDescriptionField?.stringValue = nval
-            }
-        }
+    enum Mode {
+        case AddMode, EditMode
     }
     
-    var eventDate: NSDate? {
+    var date: NSDate? {
         get {
             return self.datePicker?.dateValue
         } set {
@@ -31,10 +24,21 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
+    private(set) var event: AUEvent?
+    var mode: Mode {
+        get {
+            if event == nil {
+                return .AddMode
+            } else {
+                return .EditMode
+            }
+        }
+    }
+    
     @IBOutlet weak var eventDescriptionField: NSTextField?
     @IBOutlet weak var datePicker: NSDatePicker?
     var popover: NSPopover? = nil // TODO hack
-    @IBOutlet weak var addEventButton: NSButton?
+    @IBOutlet weak var addEventButton: NSButton? // TODO rename
 
     static func newInstance() -> PopoverViewController? { // TODO hack
         let pvc = PopoverViewController(nibName: "PopoverViewController", bundle: NSBundle(identifier: "Augustus"))
@@ -55,11 +59,19 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
-    @IBAction func addEvent(sender: AnyObject) {
+    @IBAction func addEvent(sender: AnyObject) { // TODO rename
         if let description = eventDescriptionField?.stringValue {
             if !description.isEmpty { // TODO strip whitespace too
                 if let date = datePicker?.dateValue {
-                    AUModel.eventStore.addEventOnDate(date, description: description)
+                    switch self.mode {
+                    case .AddMode:
+                        AUModel.eventStore.addEventOnDate(date, description: description)
+                    case .EditMode:
+                        if let event = self.event {
+                            AUModel.eventStore.editEvent(event, newDate: date, newDescription: description)
+                        }
+                    }
+                    
                     NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
                 }
             }
@@ -70,6 +82,19 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     
     @IBAction func close(sender: AnyObject) {
         self.popover?.performClose(self)
+    }
+    
+    func setModeToAdd() {
+        self.event = nil
+        self.eventDescriptionField?.stringValue = ""
+        self.addEventButton?.title = "Add Event" // TODO dup String from IB
+    }
+    
+    func setModeToEdit(event: AUEvent) {
+        self.event = event
+        self.date = event.date
+        self.eventDescriptionField?.stringValue = event.description
+        self.addEventButton?.title = "Edit Event"
     }
     
 }

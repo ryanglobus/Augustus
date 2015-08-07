@@ -16,6 +16,7 @@ class AUDateView: NSView {
     let controller: ViewController
     let withRightBorder: Bool
     let viewLabel: AUDateViewLabel
+    var auDelegate: AUDateViewDelegate?
     
     var date: NSDate {
         didSet {
@@ -73,6 +74,13 @@ class AUDateView: NSView {
             self.drawBorders()
         }
     }
+    
+    override func mouseDown(theEvent: NSEvent) {
+        if theEvent.clickCount == 2 {
+            self.auDelegate?.requestNewEvent?(self)
+        }
+    }
+    
     // TODO scroll
 
     
@@ -88,5 +96,5 @@ class AUDateView: NSView {
 }
 
 @objc protocol AUDateViewDelegate {
-    optional func requestNewEvent()
+    optional func requestNewEvent(dateView: AUDateView)
 }

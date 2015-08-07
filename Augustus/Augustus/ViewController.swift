@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
+class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, AUDateViewDelegate {
     
     var dateViews: [AUDateView] = []
     var monthYearLabel: NSTextField?
@@ -79,8 +79,16 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
 
         let rect = NSRect(origin: CGPoint.zeroPoint, size: eventField.frame.size)
         self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSMaxXEdge)
-        self.popoverViewController?.eventDate = eventField.eventValue.date
-        self.popoverViewController?.eventDescription = eventField.eventValue.description
+        self.popoverViewController?.setModeToEdit(eventField.eventValue)
+    }
+    
+    func requestNewEvent(dateView: AUDateView) {
+        // TODO unselect?
+        let dateViewLabel = dateView.viewLabel
+        let rect = NSRect(origin: CGPoint.zeroPoint, size: dateViewLabel.frame.size)
+        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSMaxYEdge)
+        self.popoverViewController?.setModeToAdd()
+        self.popoverViewController?.date = dateView.date
     }
     
     @IBAction
@@ -103,7 +111,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
         if let view = sender as? NSView {
             // must show first for NSDatePicker to be created for setDate:
             self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSMaxYEdge)
-            self.popoverViewController?.eventDate = self.week.firstDate
+            self.popoverViewController?.setModeToAdd()
+            self.popoverViewController?.date = self.week.firstDate
         }
     }
     
@@ -117,6 +126,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate {
             let events = AUModel.eventStore.eventsForDate(date)
             let withRightBorder = (i != dates.count - 1)
             let view = AUDateView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
+            view.auDelegate = self
             self.view.addSubview(view)
             view.events = events
             self.dateViews.append(view)

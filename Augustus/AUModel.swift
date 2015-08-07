@@ -69,6 +69,9 @@ protocol AUEventStore {
     /// returns true if an event is removed, false upon failure or if no event is removed
     mutating func removeEvent(event: AUEvent) -> Bool
     
+    /// returns true upon success, false upon failure (e.g., event is not in the AUEventStore)
+    mutating func editEvent(event: AUEvent, newDate: NSDate, newDescription: String) -> Bool
+    
     func eventsForDate(date: NSDate) -> [AUEvent]
     
     func eventsForWeek(week: AUWeek) -> [NSDate: [AUEvent]]
@@ -86,6 +89,10 @@ struct AUEventStoreInMemory: AUEventStore {
     
     mutating func addEventOnDate(date: NSDate, description: String) -> Bool {
         let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date)
+        return self.addEvent(event)
+    }
+    
+    private mutating func addEvent(event: AUEvent) -> Bool {
         let date = AUEventStoreInMemory.beginningOfDate(event.date)
         if var events = dateEventDictionary[date] {
             events.append(event)
@@ -94,6 +101,28 @@ struct AUEventStoreInMemory: AUEventStore {
             dateEventDictionary.updateValue([event], forKey: date)
         }
         return true
+    }
+    
+    // inefficient, but whatever
+    mutating func editEvent(event: AUEvent, newDate: NSDate, newDescription: String) -> Bool {
+        for (date, var events) in dateEventDictionary {
+            for i in 0..<events.count {
+                let e = events[i]
+                if e.id == event.id {
+                    // TODO modification while iterating?
+                    let newEvent = AUEventInMemory(id: event.id, description: newDescription, date: newDate)
+                    events.removeAtIndex(i)
+                    if date == AUEventStoreInMemory.beginningOfDate(newDate) { // put back in same place
+                        events.insert(newEvent, atIndex: i)
+                    } else { // add to another [AUEvent] in Dictionary
+                        self.addEvent(newEvent)
+                    }
+                    dateEventDictionary[date] = events
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     mutating func removeEvent(event: AUEvent) -> Bool {
