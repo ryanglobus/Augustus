@@ -71,8 +71,6 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
                             AUModel.eventStore.editEvent(event, newDate: date, newDescription: description)
                         }
                     }
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
                 }
             }
         }

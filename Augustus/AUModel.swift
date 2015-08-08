@@ -10,9 +10,15 @@ import Foundation
 
 struct AUModel {
     static let calendar = NSCalendar.currentCalendar()
+    static let oneHour: NSTimeInterval = 60 * 60
     static let oneDay: NSTimeInterval = 60 * 60 * 24
     static let notificationName = "AUModelNotification"
-    static var eventStore: AUEventStore = AUEventStoreInMemory()
+    static var eventStore: AUEventStore = AUEventStoreInEK()
+    
+    static func beginningOfDate(date: NSDate) -> NSDate {
+        let components = AUModel.calendar.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate: date)
+        return AUModel.calendar.dateFromComponents(components)!
+    }
 }
 
 
@@ -62,7 +68,14 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     }
 }
 
+enum AUEventStorePermission {
+    case Granted, Pending, Denied
+}
+
 protocol AUEventStore {
+    
+    var permission: AUEventStorePermission { get }
+    
     /// returns true upon success, false upon failure
     mutating func addEventOnDate(date: NSDate, description: String) -> Bool
     
@@ -74,7 +87,6 @@ protocol AUEventStore {
     
     func eventsForDate(date: NSDate) -> [AUEvent]
     
-    func eventsForWeek(week: AUWeek) -> [NSDate: [AUEvent]]
 }
 
 
@@ -87,13 +99,15 @@ struct AUEventStoreInMemory: AUEventStore {
     
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()
     
+    let permission: AUEventStorePermission = .Granted
+    
     mutating func addEventOnDate(date: NSDate, description: String) -> Bool {
         let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date)
         return self.addEvent(event)
     }
     
     private mutating func addEvent(event: AUEvent) -> Bool {
-        let date = AUEventStoreInMemory.beginningOfDate(event.date)
+        let date = AUModel.beginningOfDate(event.date)
         if var events = dateEventDictionary[date] {
             events.append(event)
             dateEventDictionary.updateValue(events, forKey: date)
@@ -112,7 +126,7 @@ struct AUEventStoreInMemory: AUEventStore {
                     // TODO modification while iterating?
                     let newEvent = AUEventInMemory(id: event.id, description: newDescription, date: newDate)
                     events.removeAtIndex(i)
-                    if date == AUEventStoreInMemory.beginningOfDate(newDate) { // put back in same place
+                    if date == AUModel.beginningOfDate(newDate) { // put back in same place
                         events.insert(newEvent, atIndex: i)
                     } else { // add to another [AUEvent] in Dictionary
                         self.addEvent(newEvent)
@@ -139,7 +153,7 @@ struct AUEventStoreInMemory: AUEventStore {
     }
     
     func eventsForDate(var date: NSDate) -> [AUEvent] {
-        date = AUEventStoreInMemory.beginningOfDate(date)
+        date = AUModel.beginningOfDate(date)
         if let events = dateEventDictionary[date] {
             return events
         } else {
@@ -147,7 +161,7 @@ struct AUEventStoreInMemory: AUEventStore {
         }
     }
     
-    func eventsForWeek(week: AUWeek) -> [NSDate : [AUEvent]] {
+    func eventsForWeek(week: AUWeek) -> [NSDate : [AUEvent]] { // TODO no longer needed
         var dateEvents = Dictionary<NSDate, Array<AUEvent>>()
         for date in week.dates() {
             dateEvents[date] = eventsForDate(date)
@@ -157,11 +171,6 @@ struct AUEventStoreInMemory: AUEventStore {
     
     mutating func clear() {
         dateEventDictionary.removeAll()
-    }
-    
-    private static func beginningOfDate(date: NSDate) -> NSDate {
-        let components = AUModel.calendar.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate: date)
-        return AUModel.calendar.dateFromComponents(components)!
     }
 }
 
