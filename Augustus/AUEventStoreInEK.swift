@@ -119,10 +119,11 @@ class AUEventStoreInEK : AUEventStore {
             event.calendar = calendar
             let error = NSErrorPointer()
             let success = self.ekStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
-            if !success {
+            if success {
+                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+            } else {
                 self.log.error?(error.debugDescription)
             }
-            NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
             return success
         }
         return false
@@ -136,7 +137,24 @@ class AUEventStoreInEK : AUEventStore {
     
     /// returns true upon success, false upon failure (e.g., event is not in the AUEventStore)
     func editEvent(event: AUEvent, newDate: NSDate, newDescription: String) -> Bool {
-        // TODO
+        if self.permission != .Granted {
+            return false
+        }
+        if let ekEvent = self.ekStore.eventWithIdentifier(event.id) {
+            // TODO below is dup code
+            ekEvent.startDate = AUModel.beginningOfDate(newDate)
+            ekEvent.endDate = ekEvent.startDate.dateByAddingTimeInterval(AUModel.oneHour)
+            ekEvent.allDay = true
+            ekEvent.title = newDescription
+            let error = NSErrorPointer()
+            let success = self.ekStore.saveEvent(ekEvent, span: EKSpanThisEvent, commit: true, error: error)
+            if success {
+                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+            } else {
+                self.log.error?(error.debugDescription)
+            }
+            return success
+        }
         return false
     }
     

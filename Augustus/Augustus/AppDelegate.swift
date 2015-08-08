@@ -21,7 +21,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // TODO is below even needed?
         self.alertIfEventStorePermissionDenied()
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) -> Void in
-            self.log.debug?("App delegate received notification")
             self.alertIfEventStorePermissionDenied()
         })
         log.info?("did finish launching")

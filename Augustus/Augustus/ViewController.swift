@@ -10,6 +10,8 @@ import Cocoa
 
 class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, AUDateViewDelegate {
     
+    // TODO handle event modification failure
+    
     var dateViews: [AUDateView] = []
     var monthYearLabel: NSTextField?
     var popoverViewController: PopoverViewController?
