@@ -11,10 +11,23 @@ import EventKit
 
 class AUEventStoreInEK : AUEventStore {
     
+    private struct AUEventInEK: AUEvent {
+        let id: String
+        let description: String
+        let date: NSDate
+        
+        init(ekEvent: EKEvent) {
+            self.id = ekEvent.eventIdentifier
+            self.description = ekEvent.title
+            self.date = ekEvent.startDate // TODO handle multi-day events
+        }
+    }
+    
     private let log = AULog.instance
     private let ekStore: EKEventStore
+    // TODO below use ekStore?
     private(set) var permission: AUEventStorePermission // TODO listen for changes
-    private var ekCalendar: EKCalendar?
+    private var ekCalendar_: EKCalendar?
     
     init() {
         self.ekStore = EKEventStore()
@@ -34,14 +47,14 @@ class AUEventStoreInEK : AUEventStore {
                     for calendar in calendars {
                         // TODO make sure iCloud source
                         if calendar.title == "Augustus" { // TODO or unique identifier?
-                            self.ekCalendar = calendar
+                            self.ekCalendar_ = calendar
                             self.log.info?("Found calendar with id \(calendar.calendarIdentifier)")
                             break
                         }
                     }
                     
                     // if calendar not found, create it
-                    if self.ekCalendar == nil {
+                    if self.ekCalendar_ == nil {
                         // get ekSource for new calendar
                         var ekSource: EKSource? = nil
                         if let sources = self.ekStore.sources() as? [EKSource] {
@@ -62,7 +75,7 @@ class AUEventStoreInEK : AUEventStore {
                             calendar.source = ekSource
                             let error = NSErrorPointer()
                             if self.ekStore.saveCalendar(calendar, commit: true, error: error) {
-                                self.ekCalendar = calendar
+                                self.ekCalendar_ = calendar
                                 self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
                             } else {
                                 self.log.error?("Failed to create calendar")
@@ -94,7 +107,24 @@ class AUEventStoreInEK : AUEventStore {
     
     /// returns true upon success, false upon failure
     func addEventOnDate(date: NSDate, description: String) -> Bool {
-        // TODO
+        if self.permission != .Granted {
+            return false
+        }
+        if let calendar = self.ekCalendar_ {
+            let event = EKEvent(eventStore: self.ekStore)
+            event.startDate = AUModel.beginningOfDate(date)
+            event.endDate = event.startDate.dateByAddingTimeInterval(AUModel.oneHour)
+            event.allDay = true
+            event.title = description
+            event.calendar = calendar
+            let error = NSErrorPointer()
+            let success = self.ekStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
+            if !success {
+                self.log.error?(error.debugDescription)
+            }
+            NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+            return success
+        }
         return false
     }
     
@@ -111,12 +141,17 @@ class AUEventStoreInEK : AUEventStore {
     }
     
     func eventsForDate(date: NSDate) -> [AUEvent] {
-        // TODO
+        if self.permission != .Granted {
+            return [] // TODO return nil?
+        }
+        if let calendar = self.ekCalendar_ {
+            let start = AUModel.beginningOfDate(date)
+            let end = start.dateByAddingTimeInterval(AUModel.oneDay)
+            let predicate = self.ekStore.predicateForEventsWithStartDate(start, endDate: end, calendars: [calendar])
+            if let ekEvents = self.ekStore.eventsMatchingPredicate(predicate) as? [EKEvent] {
+                return ekEvents.map({AUEventInEK(ekEvent: $0)})
+            }
+        }
         return []
-    }
-    
-    func eventsForWeek(week: AUWeek) -> [NSDate: [AUEvent]] {
-        // TODO
-        return [:]
     }
 }
