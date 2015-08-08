@@ -131,7 +131,19 @@ class AUEventStoreInEK : AUEventStore {
     
     /// returns true if an event is removed, false upon failure or if no event is removed
     func removeEvent(event: AUEvent) -> Bool {
-        // TODO
+        if self.permission != .Granted {
+            return false
+        }
+        if let ekEvent = self.ekStore.eventWithIdentifier(event.id) {
+            let error = NSErrorPointer()
+            let success = self.ekStore.removeEvent(ekEvent, span: EKSpanThisEvent, commit: true, error: error)
+            if success {
+                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+            } else {
+                self.log.error?(error.debugDescription)
+            }
+            return success
+        }
         return false
     }
     
