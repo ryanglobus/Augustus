@@ -72,6 +72,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
                         }
                     }
                     
+                    // TODO move, but make sure this notification gets sent upon success and failure so alert window goes up
                     NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
                 }
             }

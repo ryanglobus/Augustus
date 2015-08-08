@@ -31,8 +31,6 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         var window = NSApplication.sharedApplication().windows[0] as? NSWindow
         window?.delegate = self
         
-        AUModel.eventStore.addEventOnDate(NSDate(), description: "Today is a great day!")
-        AUModel.eventStore.addEventOnDate(NSDate(), description: "Get ready for tomorrow")
         self.addDateViews()
         self.unselect()
         // TODO make below queue proper UI queue/execute in UI queue
@@ -149,7 +147,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     func delete(sender: AnyObject?) {
         if let event = self.selectedEventField?.eventValue {
             AUModel.eventStore.removeEvent(event)
-            // TODO should notifications be in model itself?
+            // TODO should notifications be in model itself? if so make sure alert dialog still goes up
             NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
             self.unselect()
         }

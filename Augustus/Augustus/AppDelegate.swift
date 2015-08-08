@@ -36,8 +36,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let alert = NSAlert()
             alert.addButtonWithTitle("Go to System Preferences...")
             alert.addButtonWithTitle("Quit")
-            alert.messageText = "Augustus cannot access your calendars."
-            alert.informativeText = "You must grant Augustus access to your calendars in order to see or create events. To do so, go to System Preferences."
+            alert.messageText = "Please grant Augustus access to your calendars."
+            alert.informativeText = "You must grant Augustus access to your calendars in order to see or create events. To do so, go to System Preferences. Select Calendars in the left pane. Then, in the center pane, click the checkbox next to Augustus. Then restart Augustus."
             alert.alertStyle = NSAlertStyle.WarningAlertStyle
             let response = alert.runModal()
             if response == NSAlertFirstButtonReturn {
