@@ -71,9 +71,6 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
                             AUModel.eventStore.editEvent(event, newDate: date, newDescription: description)
                         }
                     }
-                    
-                    // TODO move, but make sure this notification gets sent upon success and failure so alert window goes up
-                    NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
                 }
             }
         }

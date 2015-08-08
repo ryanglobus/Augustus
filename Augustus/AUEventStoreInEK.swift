@@ -103,6 +103,10 @@ class AUEventStoreInEK : AUEventStore {
             self.log.debug?("send notification")
             NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
         })
+        NSNotificationCenter.defaultCenter().addObserverForName(EKEventStoreChangedNotification, object: nil, queue: nil) { (notification: NSNotification!) in
+            self.log.debug?("Notification from EventKit")
+            NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+        }
     }
     
     /// returns true upon success, false upon failure
@@ -119,9 +123,7 @@ class AUEventStoreInEK : AUEventStore {
             event.calendar = calendar
             let error = NSErrorPointer()
             let success = self.ekStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
-            if success {
-                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
-            } else {
+            if !success {
                 self.log.error?(error.debugDescription)
             }
             return success
@@ -137,9 +139,7 @@ class AUEventStoreInEK : AUEventStore {
         if let ekEvent = self.ekStore.eventWithIdentifier(event.id) {
             let error = NSErrorPointer()
             let success = self.ekStore.removeEvent(ekEvent, span: EKSpanThisEvent, commit: true, error: error)
-            if success {
-                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
-            } else {
+            if !success {
                 self.log.error?(error.debugDescription)
             }
             return success
@@ -160,9 +160,7 @@ class AUEventStoreInEK : AUEventStore {
             ekEvent.title = newDescription
             let error = NSErrorPointer()
             let success = self.ekStore.saveEvent(ekEvent, span: EKSpanThisEvent, commit: true, error: error)
-            if success {
-                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
-            } else {
+            if !success {
                 self.log.error?(error.debugDescription)
             }
             return success

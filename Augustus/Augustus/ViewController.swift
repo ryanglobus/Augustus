@@ -12,6 +12,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     
     // TODO handle event modification failure
     
+    private let log = AULog.instance
     var dateViews: [AUDateView] = []
     var monthYearLabel: NSTextField?
     var popoverViewController: PopoverViewController?
@@ -33,10 +34,12 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         
         self.addDateViews()
         self.unselect()
-        // TODO make below queue proper UI queue/execute in UI queue
-        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification!) in
+            self.log.debug?("refresh!")
+            dispatch_async(dispatch_get_main_queue()) {
                 self.refresh()
-            })
+            }
+        }
     }
     
     override func viewWillAppear() {
@@ -147,8 +150,6 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     func delete(sender: AnyObject?) {
         if let event = self.selectedEventField?.eventValue {
             AUModel.eventStore.removeEvent(event)
-            // TODO should notifications be in model itself? if so make sure alert dialog still goes up
-            NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
             self.unselect()
         }
     }
