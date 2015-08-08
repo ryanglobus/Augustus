@@ -77,7 +77,6 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
             }
         }
         self.close(sender)
-        // TODO close popover on click too
     }
     
     @IBAction func close(sender: AnyObject) {

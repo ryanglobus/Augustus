@@ -94,6 +94,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.popoverViewController?.setModeToEdit(eventField.eventValue)
     }
     
+    // TODO don't show datePicker
     func requestNewEventForDateView(dateView: AUDateView) {
         // TODO unselect?
         let dateViewLabel = dateView.viewLabel
