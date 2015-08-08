@@ -12,7 +12,7 @@ struct AUModel {
     static let calendar = NSCalendar.currentCalendar()
     static let oneDay: NSTimeInterval = 60 * 60 * 24
     static let notificationName = "AUModelNotification"
-    static var eventStore: AUEventStore = AUEventStoreInMemory()
+    static var eventStore: AUEventStore = AUEventStoreInEK()
 }
 
 
@@ -62,7 +62,14 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     }
 }
 
+enum AUEventStorePermission {
+    case Granted, Pending, Denied
+}
+
 protocol AUEventStore {
+    
+    var permission: AUEventStorePermission { get }
+    
     /// returns true upon success, false upon failure
     mutating func addEventOnDate(date: NSDate, description: String) -> Bool
     
@@ -86,6 +93,8 @@ struct AUEventStoreInMemory: AUEventStore {
     }
     
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()
+    
+    let permission: AUEventStorePermission = .Granted
     
     mutating func addEventOnDate(date: NSDate, description: String) -> Bool {
         let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date)

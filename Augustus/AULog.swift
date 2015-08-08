@@ -32,7 +32,7 @@ class AULog {
                 print("[\(now)] \(levelString) - ")
                 if let msg: AnyObject = msg_ {
                     println(msg)
-                } else {
+                } else { // TODO don't even print anything
                     println()
                 }
             }

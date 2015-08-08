@@ -33,7 +33,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         AUModel.eventStore.addEventOnDate(NSDate(), description: "Get ready for tomorrow")
         self.addDateViews()
         self.unselect()
-        // TODO make below queue proper UI queue
+        // TODO make below queue proper UI queue/execute in UI queue
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) -> Void in
                 self.refresh()
             })
