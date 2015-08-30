@@ -40,7 +40,7 @@ class AUEventField: NSTextField {
 //        event.description.sizeWithWidth(200, andFont: font)
         
         // TODO make below method
-        // TODO below doesn't work for "Woah it's the 12th"
+        // TODO below doesn't work for "Brunch with Rupii" (too tall)
         let storage = NSTextStorage(string: event.description)
         let container = NSTextContainer(containerSize: NSSize(width: width, height: CGFloat.max))
         let layoutManager = NSLayoutManager()
