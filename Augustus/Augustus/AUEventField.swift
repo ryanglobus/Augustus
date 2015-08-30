@@ -47,9 +47,9 @@ class AUEventField: NSTextField {
         layoutManager.addTextContainer(container)
         storage.addLayoutManager(layoutManager)
         storage.addAttribute(NSFontAttributeName, value: font, range: NSMakeRange(0, storage.length))
-        container.lineFragmentPadding = 0.0
+        container.lineFragmentPadding = 3.0 // 3.0 to prevent text at same width from being cut off
         layoutManager.glyphRangeForTextContainer(container)
-        let height = layoutManager.usedRectForTextContainer(container).size.height + font.pointSize / 3 // add font.pointSize / 2 for letters like 'y' and 'g'
+        let height = layoutManager.usedRectForTextContainer(container).size.height + font.pointSize / 3 // add font.pointSize / 3 for letters like 'y' and 'g'
         
         let frame = NSRect(origin: origin, size: CGSize(width: width, height: height))
         super.init(frame: frame)
