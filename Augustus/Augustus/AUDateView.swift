@@ -9,10 +9,13 @@
 import Cocoa
 
 class AUDateView: NSView {
+    static let eventMargin: CGFloat = 5
     static let width = CGFloat(150)
+    static let heightForEvents = CGFloat(450)
     // TODO 450 const in multiple places
-    static let size = CGSize(width: AUDateView.width, height: AUDateViewLabel.size.height + 450)
+    static let size = CGSize(width: AUDateView.width, height: AUDateViewLabel.size.height + AUDateView.heightForEvents)
     
+    private let log = AULog.instance
     let controller: ViewController
     let withRightBorder: Bool
     let viewLabel: AUDateViewLabel
@@ -36,14 +39,39 @@ class AUDateView: NSView {
         }
     }
     
+    var height: CGFloat {
+        get {
+            return self.frame.height
+        }
+        set {
+            let delta = newValue - self.height
+            self.setFrameSize(NSSize(width: self.frame.width, height: newValue))
+            for subview_ in self.subviews {
+                if let subview = subview_ as? NSView {
+                    subview.setFrameOrigin(NSPoint(x: subview.frame.origin.x, y: subview.frame.origin.y + delta))
+                }
+            }
+        }
+    }
+    
+    var desiredHeight: CGFloat {
+        get {
+            let eventHeight = eventViews.reduce(0) {(totalHeight, eventView) in
+                return totalHeight + eventView.frame.height + AUDateView.eventMargin
+            }
+            return max(eventHeight + self.viewLabel.frame.height, AUDateView.size.height)
+        }
+    }
+    
     private var eventViews: [NSView] = [] {
         didSet(oldEventViews) {
             for oldView in oldEventViews {
                 oldView.removeFromSuperview()
             }
-            var y = AUDateView.size.height - AUDateViewLabel.size.height
+            
+            var y = self.frame.height - self.viewLabel.frame.height
             for view in self.eventViews {
-                y -= view.frame.size.height + 5 // 5 for margin
+                y -= view.frame.size.height + AUDateView.eventMargin
                 view.frame.origin.y = y
                 self.addSubview(view)
             }
@@ -54,7 +82,7 @@ class AUDateView: NSView {
     init(controller: ViewController, date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
         self.controller = controller
         self.date = date
-        self.viewLabel = AUDateViewLabel(date: date, origin: CGPoint(x: 0, y: 450))
+        self.viewLabel = AUDateViewLabel(date: date, origin: CGPoint(x: 0, y: AUDateView.heightForEvents))
         self.withRightBorder = withRightBorder
         
         let frame = NSRect(origin: origin, size: AUDateView.size)
@@ -82,14 +110,11 @@ class AUDateView: NSView {
         }
     }
     
-    // TODO scroll
-
-    
     private func drawBorders() {
         let path = NSBezierPath()
         // border to the right
         path.moveToPoint(NSPoint(x: AUDateView.size.width, y: 0))
-        path.lineToPoint(NSPoint(x: AUDateView.size.width, y: 450))
+        path.lineToPoint(NSPoint(x: AUDateView.size.width, y: self.height - self.viewLabel.frame.height))
         path.lineWidth = 2
         path.stroke()
     }

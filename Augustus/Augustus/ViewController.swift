@@ -18,6 +18,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     var popoverViewController: PopoverViewController?
     var selectedEventField: AUEventField?
     var addEventButton: NSButton?
+    private var scrollView: NSScrollView?
     var week: AUWeek = AUWeek() {
         didSet {
             self.refresh()
@@ -32,8 +33,16 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         var window = NSApplication.sharedApplication().windows[0] as? NSWindow
         window?.delegate = self
         
+        if (self.scrollView == nil) {
+            self.scrollView = NSScrollView(frame: self.view.frame)
+            self.scrollView?.hasVerticalScroller = true
+            self.scrollView?.documentView = NSView(frame: self.scrollView!.frame)
+            self.view.addSubview(scrollView!)
+        }
+        
         self.addDateViews()
         self.unselect()
+        self.refresh() // TODO needed?
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification!) in
             self.log.debug?("refresh!")
             dispatch_async(dispatch_get_main_queue()) {
@@ -70,6 +79,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         // Update the view, if already loaded.
         }
     }
+    
+    
     
     // TODO unselect when add event
     func select(eventField: AUEventField) {
@@ -182,8 +193,14 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             let withRightBorder = (i != dates.count - 1)
             let view = AUDateView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
             view.auDelegate = self
-            self.view.addSubview(view)
-            view.events = events
+            if let documentView = self.scrollView?.documentView as? NSView {
+//                if (view.frame.height > documentView.frame.height) { // TODO no
+//                    log.debug?("Setting doc view height to \(view.frame.height)")
+//                    documentView.setFrameSize(NSSize(width: documentView.frame.width, height: view.frame.height))
+//                }
+                documentView.addSubview(view)
+            }
+//            view.events = events
             self.dateViews.append(view)
             i++
         }
@@ -202,6 +219,25 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             let view = dateViews[i]
             view.date = date
             view.events = AUModel.eventStore.eventsForDate(date)
+        }
+        if let documentView = self.scrollView?.documentView as? NSView {
+            let desiredHeight = dateViews.reduce(AUDateView.size.height) {(minHeight, dateView) in
+                return max(minHeight, dateView.desiredHeight)
+            }
+//            let delta = desiredHeight - documentView.frame.height
+            
+            for dateView in dateViews {
+                dateView.height = desiredHeight
+            }
+            documentView.setFrameSize(NSSize(width: documentView.frame.width, height: desiredHeight))
+            
+            if let contentView = self.scrollView?.contentView {
+//                let newY = max(contentView.documentVisibleRect.origin.y + delta, 0)
+                // TODO only go to top if new week
+                let newScrollPoint = NSPoint(x: contentView.documentVisibleRect.origin.x, y: documentView.frame.height - contentView.documentVisibleRect.height)
+                self.scrollView?.contentView.scrollToPoint(newScrollPoint)
+                self.scrollView?.reflectScrolledClipView(contentView)
+            }
         }
     }
 
