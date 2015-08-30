@@ -21,7 +21,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     private var scrollView: NSScrollView?
     var week: AUWeek = AUWeek() {
         didSet {
-            self.refresh()
+            self.refresh(newWeek: true)
         }
     }
     
@@ -212,7 +212,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.monthYearLabel?.stringValue = df.stringFromDate(week.firstDate)
     }
     
-    private func refresh() {
+    private func refresh(newWeek: Bool = false) {
         self.drawMonthYearLabel()
         for i in 0..<AUWeek.numDaysInWeek {
             let date = week[i]
@@ -224,7 +224,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             let desiredHeight = dateViews.reduce(AUDateView.size.height) {(minHeight, dateView) in
                 return max(minHeight, dateView.desiredHeight)
             }
-//            let delta = desiredHeight - documentView.frame.height
+            let delta = desiredHeight - documentView.frame.height
             
             for dateView in dateViews {
                 dateView.height = desiredHeight
@@ -232,9 +232,14 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             documentView.setFrameSize(NSSize(width: documentView.frame.width, height: desiredHeight))
             
             if let contentView = self.scrollView?.contentView {
-//                let newY = max(contentView.documentVisibleRect.origin.y + delta, 0)
+                let y: CGFloat
+                if newWeek {
+                    y = documentView.frame.height - contentView.documentVisibleRect.height
+                } else {
+                    y = max(contentView.documentVisibleRect.origin.y + delta, 0)
+                }
                 // TODO only go to top if new week
-                let newScrollPoint = NSPoint(x: contentView.documentVisibleRect.origin.x, y: documentView.frame.height - contentView.documentVisibleRect.height)
+                let newScrollPoint = NSPoint(x: contentView.documentVisibleRect.origin.x, y: y)
                 self.scrollView?.contentView.scrollToPoint(newScrollPoint)
                 self.scrollView?.reflectScrolledClipView(contentView)
             }
