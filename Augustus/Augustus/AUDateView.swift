@@ -30,6 +30,13 @@ class AUDateView: NSView {
     
     var events: [AUEvent] = [] {
         didSet {
+            events.sort() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
+                var compareResult = lhs.creationDate.compare(rhs.creationDate)
+                if compareResult != .OrderedSame {
+                    compareResult = lhs.description.compare(rhs.description)
+                }
+                return compareResult == .OrderedAscending
+            }
             self.eventViews = events.map({ (event) -> NSView in
                 // TODO fix height constraint
                 let eventField = AUEventField(origin: CGPoint.zeroPoint, width: AUDateView.size.width, event: event)

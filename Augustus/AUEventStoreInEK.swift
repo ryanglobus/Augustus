@@ -15,11 +15,13 @@ class AUEventStoreInEK : AUEventStore {
         let id: String
         let description: String
         let date: NSDate
+        let creationDate: NSDate
         
         init(ekEvent: EKEvent) {
             self.id = ekEvent.eventIdentifier
             self.description = ekEvent.title
             self.date = ekEvent.startDate // TODO handle multi-day events
+            self.creationDate = ekEvent.creationDate
         }
     }
     

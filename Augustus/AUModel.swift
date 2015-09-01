@@ -27,6 +27,7 @@ protocol AUEvent {
     var id: String { get }
     var description: String { get }
     var date: NSDate { get }
+    var creationDate: NSDate { get }
 }
 
 struct AUWeek { // TODO let user choose start on Sunday/Monday
@@ -95,6 +96,7 @@ struct AUEventStoreInMemory: AUEventStore {
         let id: String
         let description: String
         let date: NSDate
+        let creationDate: NSDate
     }
     
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()
@@ -102,7 +104,7 @@ struct AUEventStoreInMemory: AUEventStore {
     let permission: AUEventStorePermission = .Granted
     
     mutating func addEventOnDate(date: NSDate, description: String) -> Bool {
-        let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date)
+        let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date, creationDate: NSDate())
         return self.addEvent(event)
     }
     
@@ -124,7 +126,7 @@ struct AUEventStoreInMemory: AUEventStore {
                 let e = events[i]
                 if e.id == event.id {
                     // TODO modification while iterating?
-                    let newEvent = AUEventInMemory(id: event.id, description: newDescription, date: newDate)
+                    let newEvent = AUEventInMemory(id: event.id, description: newDescription, date: newDate, creationDate: event.creationDate)
                     events.removeAtIndex(i)
                     if date == AUModel.beginningOfDate(newDate) { // put back in same place
                         events.insert(newEvent, atIndex: i)

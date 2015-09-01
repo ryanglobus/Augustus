@@ -34,6 +34,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         log.info?("will terminate")
     }
     
+    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {
+        return true
+    }
+    
     private func alertIfEventStorePermissionDenied() {
         if AUModel.eventStore.permission == .Denied {
             let alert = NSAlert()
