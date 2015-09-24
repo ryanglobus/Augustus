@@ -29,11 +29,11 @@ class AULog {
         func loggerForLevel(levelString: NSString) -> AULogger {
             return {(msg_: AnyObject?) -> () in
                 let now = NSDate()
-                print("[\(now)] \(levelString) - ")
+                print("[\(now)] \(levelString) - ", terminator: "")
                 if let msg: AnyObject = msg_ {
-                    println(msg)
+                    print(msg)
                 } else { // TODO don't even print anything
-                    println()
+                    print("")
                 }
             }
         }

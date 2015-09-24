@@ -30,7 +30,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        var window = NSApplication.sharedApplication().windows[0] as? NSWindow
+        let window = NSApplication.sharedApplication().windows[0] as? NSWindow
         window?.delegate = self
         
         if (self.scrollView == nil) {
@@ -43,7 +43,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.addDateViews()
         self.unselect()
         self.refresh() // TODO needed?
-        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification!) in
+        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification) in
             self.log.debug?("refresh!")
             dispatch_async(dispatch_get_main_queue()) {
                 self.refresh()
@@ -103,8 +103,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     func requestEdit(eventField: AUEventField) { // TODO actually edit event
         self.select(eventField)
 
-        let rect = NSRect(origin: CGPoint.zeroPoint, size: eventField.frame.size)
-        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSMaxXEdge)
+        let rect = NSRect(origin: CGPoint.zero, size: eventField.frame.size)
+        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSRectEdge.MaxX)
         self.popoverViewController?.setModeToEdit(eventField.eventValue)
     }
     
@@ -112,8 +112,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     func requestNewEventForDateView(dateView: AUDateView) {
         // TODO unselect?
         let dateViewLabel = dateView.viewLabel
-        let rect = NSRect(origin: CGPoint.zeroPoint, size: dateViewLabel.frame.size)
-        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSMaxYEdge)
+        let rect = NSRect(origin: CGPoint.zero, size: dateViewLabel.frame.size)
+        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSRectEdge.MaxY)
         self.popoverViewController?.setModeToAdd()
         self.popoverViewController?.date = dateView.date
     }
@@ -140,7 +140,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     func requestNewEvent(sender: AnyObject?) {
         if let view = self.addEventButton {
             // must show first for NSDatePicker to be created for setDate:
-            self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSMaxYEdge)
+            self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSRectEdge.MaxY)
             self.popoverViewController?.setModeToAdd()
             self.popoverViewController?.date = self.week.firstDate
         }
@@ -212,7 +212,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.monthYearLabel?.stringValue = df.stringFromDate(week.firstDate)
     }
     
-    private func refresh(newWeek: Bool = false) {
+    private func refresh(newWeek newWeek: Bool = false) {
         self.drawMonthYearLabel()
         for i in 0..<AUWeek.numDaysInWeek {
             let date = week[i]

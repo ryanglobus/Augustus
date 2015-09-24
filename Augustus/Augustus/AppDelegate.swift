@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // TODO test below
         // TODO is below even needed?
         self.alertIfEventStorePermissionDenied()
-        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification!) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil, usingBlock: { (notification: NSNotification) -> Void in
             dispatch_async(dispatch_get_main_queue()) {
                 self.alertIfEventStorePermissionDenied()
             }

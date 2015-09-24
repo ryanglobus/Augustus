@@ -48,19 +48,19 @@ class AUDateViewLabel: NSView {
     }
     
     private func drawDayOfMonth() {
-        let dayOfMonth = AUModel.calendar.component(NSCalendarUnit.CalendarUnitDay, fromDate: self.date).description
+        let dayOfMonth = AUModel.calendar.component(NSCalendarUnit.Day, fromDate: self.date).description
         let dayOfMonthAttributes = [NSFontAttributeName: NSFont.boldSystemFontOfSize(20)]
         let dayOfMonthLabel = NSAttributedString(string: dayOfMonth, attributes: dayOfMonthAttributes)
-        let x = (AUDateViewLabel.size.width - dayOfMonthLabel.size.width) / 2.0
+        let x = (AUDateViewLabel.size.width - dayOfMonthLabel.size().width) / 2.0
         dayOfMonthLabel.drawAtPoint(CGPoint(x: x, y: 0))
     }
     
     private func drawDayOfWeek() {
-        let dayOfWeekNumber = AUModel.calendar.component(NSCalendarUnit.CalendarUnitWeekday, fromDate: self.date)
+        let dayOfWeekNumber = AUModel.calendar.component(NSCalendarUnit.Weekday, fromDate: self.date)
         if let dayOfWeek = AUDateViewLabel.nameForDayOfWeek(dayOfWeekNumber) {
             let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
             let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
-            let x = (AUDateViewLabel.size.width - dayOfWeekLabel.size.width) / 2.0
+            let x = (AUDateViewLabel.size.width - dayOfWeekLabel.size().width) / 2.0
             dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
         }
     }
@@ -76,7 +76,7 @@ class AUDateViewLabel: NSView {
             case 6: return "Friday"
             case 7: return "Saturday"
             default:
-                println("Invalid day of week: %i", dayOfWeek)
+                Swift.print("Invalid day of week: %i", dayOfWeek)
                 return nil
         }
     }

@@ -54,8 +54,8 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     
     override func viewWillAppear() {
         self.view.window?.makeFirstResponder(self.eventDescriptionField)
-        if let addEventButtonCell = self.addEventButton?.cell() as? NSButtonCell {
-            self.view.window?.setDefaultButtonCell(addEventButtonCell)
+        if let addEventButtonCell = self.addEventButton?.cell as? NSButtonCell {
+            self.view.window?.defaultButtonCell = addEventButtonCell
         }
     }
     

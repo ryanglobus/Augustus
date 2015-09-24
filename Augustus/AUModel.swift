@@ -16,7 +16,7 @@ struct AUModel {
     static var eventStore: AUEventStore = AUEventStoreInEK()
     
     static func beginningOfDate(date: NSDate) -> NSDate {
-        let components = AUModel.calendar.components(NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitDay, fromDate: date)
+        let components = AUModel.calendar.components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day], fromDate: date)
         return AUModel.calendar.dateFromComponents(components)!
     }
 }
@@ -27,7 +27,7 @@ protocol AUEvent {
     var id: String { get }
     var description: String { get }
     var date: NSDate { get }
-    var creationDate: NSDate { get }
+    var creationDate: NSDate? { get }
 }
 
 struct AUWeek { // TODO let user choose start on Sunday/Monday
@@ -40,7 +40,7 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     
     init(containingDate date: NSDate) {
         var firstDate = date
-        while AUModel.calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: firstDate) != AUModel.calendar.firstWeekday {
+        while AUModel.calendar.component(NSCalendarUnit.NSWeekdayCalendarUnit, fromDate: firstDate) != AUModel.calendar.firstWeekday {
             firstDate = firstDate.dateByAddingTimeInterval(-1 * AUModel.oneDay)
         }
         self.firstDate = firstDate
@@ -49,7 +49,7 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     func dates() -> [NSDate] {
         var dates: [NSDate] = [firstDate]
         var date = firstDate.dateByAddingTimeInterval(AUModel.oneDay)
-        while AUModel.calendar.component(NSCalendarUnit.WeekdayCalendarUnit, fromDate: date) != AUModel.calendar.firstWeekday {
+        while AUModel.calendar.component(NSCalendarUnit.NSWeekdayCalendarUnit, fromDate: date) != AUModel.calendar.firstWeekday {
             dates.append(date)
             date = date.dateByAddingTimeInterval(AUModel.oneDay)
         }
@@ -96,7 +96,7 @@ struct AUEventStoreInMemory: AUEventStore {
         let id: String
         let description: String
         let date: NSDate
-        let creationDate: NSDate
+        let creationDate: NSDate?
     }
     
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()

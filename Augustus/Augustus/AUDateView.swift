@@ -30,8 +30,11 @@ class AUDateView: NSView {
     
     var events: [AUEvent] = [] {
         didSet {
-            events.sort() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
-                var compareResult = lhs.creationDate.compare(rhs.creationDate)
+            events.sortInPlace() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
+                var compareResult = NSComparisonResult.OrderedSame
+                if let lhsCreationDate = lhs.creationDate, rhsCreationDate = rhs.creationDate {
+                    compareResult = lhsCreationDate.compare(rhsCreationDate)
+                }
                 if compareResult != .OrderedSame {
                     compareResult = lhs.description.compare(rhs.description)
                 }
@@ -39,7 +42,7 @@ class AUDateView: NSView {
             }
             self.eventViews = events.map({ (event) -> NSView in
                 // TODO fix height constraint
-                let eventField = AUEventField(origin: CGPoint.zeroPoint, width: AUDateView.size.width, event: event)
+                let eventField = AUEventField(origin: CGPoint.zero, width: AUDateView.size.width, event: event)
                 eventField.auDelegate = self.controller
                 return eventField
             })

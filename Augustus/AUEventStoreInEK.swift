@@ -15,7 +15,7 @@ class AUEventStoreInEK : AUEventStore {
         let id: String
         let description: String
         let date: NSDate
-        let creationDate: NSDate
+        let creationDate: NSDate?
         
         init(ekEvent: EKEvent) {
             self.id = ekEvent.eventIdentifier
@@ -34,7 +34,7 @@ class AUEventStoreInEK : AUEventStore {
     init() {
         self.ekStore = EKEventStore()
         self.permission = .Pending
-        self.ekStore.requestAccessToEntityType(EKEntityTypeEvent, completion: {(success: Bool, error: NSError!) in
+        self.ekStore.requestAccessToEntityType(EKEntityType.Event, completion: {(success: Bool, error: Optional<NSError>) in
             // TODO refactor
             // TODO test all scenarios (a lot!)
             if success {
@@ -43,7 +43,7 @@ class AUEventStoreInEK : AUEventStore {
                 
                 // look for calendar
                 // TODO remember calendar
-                if let calendars = self.ekStore.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar] {
+                if let calendars = self.ekStore.calendarsForEntityType(EKEntityType.Event) as? [EKCalendar] {
                     
                     // look for calendar
                     for calendar in calendars {
@@ -59,27 +59,25 @@ class AUEventStoreInEK : AUEventStore {
                     if self.ekCalendar_ == nil {
                         // get ekSource for new calendar
                         var ekSource: EKSource? = nil
-                        if let sources = self.ekStore.sources() as? [EKSource] {
-                            for source in sources {
-                                if source.sourceType.value == EKSourceTypeCalDAV.value &&
-                                    source.title.lowercaseString == "icloud"{
-                                    // TODO more robust way to get iCloud, since user can edit this
-                                        ekSource = source
-                                        break
-                                }
+                        for source in self.ekStore.sources {
+                            if source.sourceType.rawValue == EKSourceType.CalDAV.rawValue &&
+                                source.title.lowercaseString == "icloud"{
+                                // TODO more robust way to get iCloud, since user can edit this
+                                    ekSource = source
+                                    break
                             }
                         }
                         
                         // actually create the calendar for the ekSource
                         if ekSource != nil {
-                            let calendar = EKCalendar(forEntityType: EKEntityTypeEvent, eventStore: self.ekStore)
+                            let calendar = EKCalendar(forEntityType: EKEntityType.Event, eventStore: self.ekStore)
                             calendar.title = "Augustus" // TODO dup String
-                            calendar.source = ekSource
-                            let error = NSErrorPointer()
-                            if self.ekStore.saveCalendar(calendar, commit: true, error: error) {
+                            calendar.source = ekSource!
+                            do {
+                                try self.ekStore.saveCalendar(calendar, commit: true)
                                 self.ekCalendar_ = calendar
                                 self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
-                            } else {
+                            } catch var error as NSError {
                                 self.log.error?("Failed to create calendar")
                                 self.log.error?(error.debugDescription)
                             }
@@ -105,7 +103,7 @@ class AUEventStoreInEK : AUEventStore {
             self.log.debug?("send notification")
             NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
         })
-        NSNotificationCenter.defaultCenter().addObserverForName(EKEventStoreChangedNotification, object: nil, queue: nil) { (notification: NSNotification!) in
+        NSNotificationCenter.defaultCenter().addObserverForName(EKEventStoreChangedNotification, object: nil, queue: nil) { (notification: NSNotification) in
             self.log.debug?("Notification from EventKit")
             NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
         }
@@ -123,10 +121,13 @@ class AUEventStoreInEK : AUEventStore {
             event.allDay = true
             event.title = description
             event.calendar = calendar
-            let error = NSErrorPointer()
-            let success = self.ekStore.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
-            if !success {
+            let success: Bool
+            do {
+                try self.ekStore.saveEvent(event, span: EKSpan.ThisEvent, commit: true)
+                success = true
+            } catch var error as NSError {
                 self.log.error?(error.debugDescription)
+                success = false
             }
             return success
         }
@@ -139,10 +140,13 @@ class AUEventStoreInEK : AUEventStore {
             return false
         }
         if let ekEvent = self.ekStore.eventWithIdentifier(event.id) {
-            let error = NSErrorPointer()
-            let success = self.ekStore.removeEvent(ekEvent, span: EKSpanThisEvent, commit: true, error: error)
-            if !success {
+            let success: Bool
+            do {
+                try self.ekStore.removeEvent(ekEvent, span: EKSpan.ThisEvent, commit: true)
+                success = true
+            } catch var error as NSError {
                 self.log.error?(error.debugDescription)
+                success = false
             }
             return success
         }
@@ -160,10 +164,13 @@ class AUEventStoreInEK : AUEventStore {
             ekEvent.endDate = ekEvent.startDate.dateByAddingTimeInterval(AUModel.oneHour)
             ekEvent.allDay = true
             ekEvent.title = newDescription
-            let error = NSErrorPointer()
-            let success = self.ekStore.saveEvent(ekEvent, span: EKSpanThisEvent, commit: true, error: error)
-            if !success {
+            let success: Bool
+            do {
+                try self.ekStore.saveEvent(ekEvent, span: EKSpan.ThisEvent, commit: true)
+                success = true
+            } catch var error as NSError {
                 self.log.error?(error.debugDescription)
+                success = false
             }
             return success
         }
