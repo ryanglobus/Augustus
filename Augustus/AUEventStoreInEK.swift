@@ -43,52 +43,48 @@ class AUEventStoreInEK : AUEventStore {
                 
                 // look for calendar
                 // TODO remember calendar
-                if let calendars = self.ekStore.calendarsForEntityType(EKEntityType.Event) as? [EKCalendar] {
+                let calendars = self.ekStore.calendarsForEntityType(EKEntityType.Event)
                     
-                    // look for calendar
-                    for calendar in calendars {
-                        // TODO make sure iCloud source
-                        if calendar.title == "Augustus" { // TODO or unique identifier?
-                            self.ekCalendar_ = calendar
-                            self.log.info?("Found calendar with id \(calendar.calendarIdentifier)")
-                            break
-                        }
+                // look for calendar
+                for calendar in calendars {
+                    // TODO make sure iCloud source
+                    if calendar.title == "Augustus" { // TODO or unique identifier?
+                        self.ekCalendar_ = calendar
+                        self.log.info?("Found calendar with id \(calendar.calendarIdentifier)")
+                        break
                     }
-                    
-                    // if calendar not found, create it
-                    if self.ekCalendar_ == nil {
-                        // get ekSource for new calendar
-                        var ekSource: EKSource? = nil
-                        for source in self.ekStore.sources {
-                            if source.sourceType.rawValue == EKSourceType.CalDAV.rawValue &&
-                                source.title.lowercaseString == "icloud"{
-                                // TODO more robust way to get iCloud, since user can edit this
-                                    ekSource = source
-                                    break
-                            }
-                        }
-                        
-                        // actually create the calendar for the ekSource
-                        if ekSource != nil {
-                            let calendar = EKCalendar(forEntityType: EKEntityType.Event, eventStore: self.ekStore)
-                            calendar.title = "Augustus" // TODO dup String
-                            calendar.source = ekSource!
-                            do {
-                                try self.ekStore.saveCalendar(calendar, commit: true)
-                                self.ekCalendar_ = calendar
-                                self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
-                            } catch var error as NSError {
-                                self.log.error?("Failed to create calendar")
-                                self.log.error?(error.debugDescription)
-                            }
-                        } else {
-                            self.log.error?("Failed to find source to create calendar")
-                        }
-                    }
-                    
-                } else {
-                    self.log.error?("Failed to get list of calendars from store")
                 }
+                
+                // if calendar not found, create it
+                if self.ekCalendar_ == nil {
+                    // get ekSource for new calendar
+                    var ekSource: EKSource? = nil
+                    for source in self.ekStore.sources {
+                        if source.sourceType.rawValue == EKSourceType.CalDAV.rawValue &&
+                            source.title.lowercaseString == "icloud"{
+                            // TODO more robust way to get iCloud, since user can edit this
+                                ekSource = source
+                                break
+                        }
+                    }
+                    
+                    // actually create the calendar for the ekSource
+                    if ekSource != nil {
+                        let calendar = EKCalendar(forEntityType: EKEntityType.Event, eventStore: self.ekStore)
+                        calendar.title = "Augustus" // TODO dup String
+                        calendar.source = ekSource!
+                        do {
+                            try self.ekStore.saveCalendar(calendar, commit: true)
+                            self.ekCalendar_ = calendar
+                            self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
+                        } catch let error as NSError {
+                            self.log.error?("Failed to create calendar")
+                            self.log.error?(error.debugDescription)
+                        }
+                    } else {
+                        self.log.error?("Failed to find source to create calendar")
+                    }
+                    }
                 
                 
                 
@@ -125,7 +121,7 @@ class AUEventStoreInEK : AUEventStore {
             do {
                 try self.ekStore.saveEvent(event, span: EKSpan.ThisEvent, commit: true)
                 success = true
-            } catch var error as NSError {
+            } catch let error as NSError {
                 self.log.error?(error.debugDescription)
                 success = false
             }
@@ -144,7 +140,7 @@ class AUEventStoreInEK : AUEventStore {
             do {
                 try self.ekStore.removeEvent(ekEvent, span: EKSpan.ThisEvent, commit: true)
                 success = true
-            } catch var error as NSError {
+            } catch let error as NSError {
                 self.log.error?(error.debugDescription)
                 success = false
             }
@@ -168,7 +164,7 @@ class AUEventStoreInEK : AUEventStore {
             do {
                 try self.ekStore.saveEvent(ekEvent, span: EKSpan.ThisEvent, commit: true)
                 success = true
-            } catch var error as NSError {
+            } catch let error as NSError {
                 self.log.error?(error.debugDescription)
                 success = false
             }
@@ -185,9 +181,8 @@ class AUEventStoreInEK : AUEventStore {
             let start = AUModel.beginningOfDate(date)
             let end = start.dateByAddingTimeInterval(AUModel.oneDay)
             let predicate = self.ekStore.predicateForEventsWithStartDate(start, endDate: end, calendars: [calendar])
-            if let ekEvents = self.ekStore.eventsMatchingPredicate(predicate) as? [EKEvent] {
-                return ekEvents.map({AUEventInEK(ekEvent: $0)})
-            }
+            let ekEvents = self.ekStore.eventsMatchingPredicate(predicate)
+            return ekEvents.map({AUEventInEK(ekEvent: $0)})
         }
         return []
     }

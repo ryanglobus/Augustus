@@ -56,10 +56,8 @@ class AUDateView: NSView {
         set {
             let delta = newValue - self.height
             self.setFrameSize(NSSize(width: self.frame.width, height: newValue))
-            for subview_ in self.subviews {
-                if let subview = subview_ as? NSView {
+            for subview in self.subviews {
                     subview.setFrameOrigin(NSPoint(x: subview.frame.origin.x, y: subview.frame.origin.y + delta))
-                }
             }
         }
     }

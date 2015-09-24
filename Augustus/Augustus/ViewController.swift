@@ -30,8 +30,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let window = NSApplication.sharedApplication().windows[0] as? NSWindow
-        window?.delegate = self
+        let window = NSApplication.sharedApplication().windows[0]
+        window.delegate = self
         
         if (self.scrollView == nil) {
             self.scrollView = NSScrollView(frame: self.view.frame)
@@ -56,7 +56,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         // get toolbar outlets
         if let items = self.view.window?.toolbar?.items {
             for item in items {
-                let view = (item as? NSToolbarItem)?.view
+                let view = item.view
                 if let textField = view as? NSTextField {
                     if "toolbar-month-year-label" == textField.identifier {
                         self.monthYearLabel = textField
@@ -183,13 +183,13 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     
     
     private func addDateViews() { // dup code here?
-        let frameHeight = self.view.frame.height
+//        let frameHeight = self.view.frame.height
         var i = 0
         let dates = self.week.dates()
         for date in dates {
             let x = Double(AUDateViewLabel.size.width) * Double(i)
             let origin = CGPoint(x: x, y: 0)
-            let events = AUModel.eventStore.eventsForDate(date)
+//            let events = AUModel.eventStore.eventsForDate(date)
             let withRightBorder = (i != dates.count - 1)
             let view = AUDateView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
             view.auDelegate = self
