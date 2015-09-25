@@ -35,7 +35,7 @@ class AUDateView: NSView {
                 if let lhsCreationDate = lhs.creationDate, rhsCreationDate = rhs.creationDate {
                     compareResult = lhsCreationDate.compare(rhsCreationDate)
                 }
-                if compareResult != .OrderedSame {
+                if compareResult == .OrderedSame {
                     compareResult = lhs.description.compare(rhs.description)
                 }
                 return compareResult == .OrderedAscending
