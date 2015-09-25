@@ -34,75 +34,84 @@ class AUEventStoreInEK : AUEventStore {
     init() {
         self.ekStore = EKEventStore()
         self.permission = .Pending
-        self.ekStore.requestAccessToEntityType(EKEntityType.Event, completion: {(success: Bool, error: Optional<NSError>) in
-            // TODO refactor
-            // TODO test all scenarios (a lot!)
-            if success {
-                self.permission = .Granted
-                self.log.info?("request to access EKEntityTypeEvents granted")
-                
-                // look for calendar
-                // TODO remember calendar
-                let calendars = self.ekStore.calendarsForEntityType(EKEntityType.Event)
-                    
-                // look for calendar
-                for calendar in calendars {
-                    // TODO make sure iCloud source
-                    if calendar.title == "Augustus" { // TODO or unique identifier?
-                        self.ekCalendar_ = calendar
-                        self.log.info?("Found calendar with id \(calendar.calendarIdentifier)")
-                        break
-                    }
-                }
-                
-                // if calendar not found, create it
-                if self.ekCalendar_ == nil {
-                    // get ekSource for new calendar
-                    var ekSource: EKSource? = nil
-                    for source in self.ekStore.sources {
-                        if source.sourceType.rawValue == EKSourceType.CalDAV.rawValue &&
-                            source.title.lowercaseString == "icloud"{
-                            // TODO more robust way to get iCloud, since user can edit this
-                                ekSource = source
-                                break
-                        }
-                    }
-                    
-                    // actually create the calendar for the ekSource
-                    if ekSource != nil {
-                        let calendar = EKCalendar(forEntityType: EKEntityType.Event, eventStore: self.ekStore)
-                        calendar.title = "Augustus" // TODO dup String
-                        calendar.source = ekSource!
-                        do {
-                            try self.ekStore.saveCalendar(calendar, commit: true)
-                            self.ekCalendar_ = calendar
-                            self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
-                        } catch let error as NSError {
-                            self.log.error?("Failed to create calendar")
-                            self.log.error?(error.debugDescription)
-                        }
-                    } else {
-                        self.log.error?("Failed to find source to create calendar")
-                    }
-                    }
-                
-                
-                
-            } else {
-                self.permission = .Denied
-                self.log.warn?("request to access EKEntityTypeEvents denied")
-                self.log.warn?(error?.description)
-                // TODO gracefully handle this
-            }
-            
-            // notify listeners of model change
-            self.log.debug?("send notification")
-            NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
-        })
+        
         NSNotificationCenter.defaultCenter().addObserverForName(EKEventStoreChangedNotification, object: nil, queue: nil) { (notification: NSNotification) in
             self.log.debug?("Notification from EventKit")
             NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
         }
+        
+        self.ekStore.requestAccessToEntityType(EKEntityType.Event, completion: {(success: Bool, error: Optional<NSError>) in
+            // TODO refactor
+            // TODO test all scenarios (a lot!)
+            
+            defer {
+                // notify listeners of model change
+                self.log.debug?("send notification")
+                NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
+            }
+            
+            guard success else {
+                self.permission = .Denied
+                self.log.warn?("request to access EKEntityTypeEvents denied")
+                self.log.warn?(error?.description)
+                // TODO gracefully handle this
+                return
+            }
+            
+            self.permission = .Granted
+            self.log.info?("request to access EKEntityTypeEvents granted")
+            
+            // look for calendar
+            // TODO remember calendar
+            let calendars = self.ekStore.calendarsForEntityType(EKEntityType.Event)
+            
+            // look for calendar
+            for calendar in calendars {
+                // TODO make sure iCloud source
+                if calendar.title == "Augustus" { // TODO or unique identifier?
+                    self.ekCalendar_ = calendar
+                    self.log.info?("Found calendar with id \(calendar.calendarIdentifier)")
+                    break
+                }
+            }
+            
+            // if found calendar, can return
+            guard self.ekCalendar_ == nil else {
+                return
+            }
+            
+            
+            // calendar not found, create it
+            // get ekSource for new calendar
+            var ekSource_: EKSource? = nil
+            for source in self.ekStore.sources {
+                if source.sourceType.rawValue == EKSourceType.CalDAV.rawValue &&
+                    source.title.lowercaseString == "icloud"{
+                        // TODO more robust way to get iCloud, since user can edit this
+                        ekSource_ = source
+                        break
+                }
+            }
+            
+            guard let ekSource = ekSource_ else {
+                self.log.error?("Failed to find source to create calendar")
+                return
+            }
+            
+            // actually create the calendar for the ekSource
+            let calendar = EKCalendar(forEntityType: EKEntityType.Event, eventStore: self.ekStore)
+            calendar.title = "Augustus" // TODO dup String
+            calendar.source = ekSource
+            do {
+                try self.ekStore.saveCalendar(calendar, commit: true)
+                self.ekCalendar_ = calendar
+                self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
+            } catch let error as NSError {
+                self.log.error?("Failed to create calendar")
+                self.log.error?(error.debugDescription)
+            }
+
+        })
     }
     
     /// returns true upon success, false upon failure
