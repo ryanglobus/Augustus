@@ -8,6 +8,7 @@
 
 import Foundation
 import EventKit
+import Cocoa
 
 class AUEventStoreInEK : AUEventStore {
     
@@ -22,6 +23,19 @@ class AUEventStoreInEK : AUEventStore {
             self.description = ekEvent.title
             self.date = ekEvent.startDate // TODO handle multi-day events
             self.creationDate = ekEvent.creationDate
+        }
+        
+        var color: NSColor {
+            get {
+                if let color = AUCoreData.instance?.colorForAUEvent(self) {
+                    return color
+                } else {
+                    return NSColor.blackColor()
+                }
+            }
+            set {
+                AUCoreData.instance?.setColor(newValue, forEvent: self)
+            }
         }
     }
     
@@ -115,9 +129,9 @@ class AUEventStoreInEK : AUEventStore {
     }
     
     /// returns true upon success, false upon failure
-    func addEventOnDate(date: NSDate, description: String) -> Bool {
+    func addEventOnDate(date: NSDate, description: String) -> AUEvent? {
         if self.permission != .Granted {
-            return false
+            return nil
         }
         if let calendar = self.ekCalendar_ {
             let event = EKEvent(eventStore: self.ekStore)
@@ -126,17 +140,15 @@ class AUEventStoreInEK : AUEventStore {
             event.allDay = true
             event.title = description
             event.calendar = calendar
-            let success: Bool
             do {
                 try self.ekStore.saveEvent(event, span: EKSpan.ThisEvent, commit: true)
-                success = true
+                return AUEventInEK(ekEvent: event)
             } catch let error as NSError {
                 self.log.error?(error.debugDescription)
-                success = false
+                return nil
             }
-            return success
         }
-        return false
+        return nil
     }
     
     /// returns true if an event is removed, false upon failure or if no event is removed

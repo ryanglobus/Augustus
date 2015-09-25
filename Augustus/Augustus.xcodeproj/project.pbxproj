@@ -8,7 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3F34662E1B6E8FF2004285FD /* AUEventField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F34662D1B6E8FF2004285FD /* AUEventField.swift */; };
+		3F6533251B991F98000D9BCF /* AUCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F86561E1B97DE2500B61B1D /* AUCoreData.swift */; };
 		3F75A2EA1B69254A004E878F /* AUDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F75A2E91B69254A004E878F /* AUDateView.swift */; };
+		3F86561F1B97DE2500B61B1D /* AUCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F86561E1B97DE2500B61B1D /* AUCoreData.swift */; };
+		3F8656211B97E9D500B61B1D /* AUEventInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8656201B97E9D500B61B1D /* AUEventInfo.swift */; };
+		3F8656221B97E9D500B61B1D /* AUEventInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8656201B97E9D500B61B1D /* AUEventInfo.swift */; };
 		3FA6F9D41B75868300FBDF9C /* AUEventStoreInEK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6F9D31B75868300FBDF9C /* AUEventStoreInEK.swift */; };
 		3FA6F9D51B75868300FBDF9C /* AUEventStoreInEK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6F9D31B75868300FBDF9C /* AUEventStoreInEK.swift */; };
 		3FA6F9D71B76728100FBDF9C /* AULog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6F9D61B76728100FBDF9C /* AULog.swift */; };
@@ -23,6 +27,8 @@
 		3FF21A091B6D2D8D00394C5F /* PopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF21A071B6D2D8D00394C5F /* PopoverViewController.swift */; };
 		3FF21A0A1B6D2D8D00394C5F /* PopoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3FF21A081B6D2D8D00394C5F /* PopoverViewController.xib */; };
 		3FF9ED231B5C38710019328E /* AUDateViewLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF9ED221B5C38710019328E /* AUDateViewLabel.swift */; };
+		3FFB2D581B95440D000F0254 /* AUCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB2D561B95440D000F0254 /* AUCoreDataModel.xcdatamodeld */; };
+		3FFB2D591B95440D000F0254 /* AUCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FFB2D561B95440D000F0254 /* AUCoreDataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +44,8 @@
 /* Begin PBXFileReference section */
 		3F34662D1B6E8FF2004285FD /* AUEventField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUEventField.swift; sourceTree = "<group>"; };
 		3F75A2E91B69254A004E878F /* AUDateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUDateView.swift; sourceTree = "<group>"; };
+		3F86561E1B97DE2500B61B1D /* AUCoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUCoreData.swift; sourceTree = "<group>"; };
+		3F8656201B97E9D500B61B1D /* AUEventInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUEventInfo.swift; sourceTree = "<group>"; };
 		3FA6F9D31B75868300FBDF9C /* AUEventStoreInEK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUEventStoreInEK.swift; sourceTree = "<group>"; };
 		3FA6F9D61B76728100FBDF9C /* AULog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AULog.swift; sourceTree = "<group>"; };
 		3FE17BC81B38E92200EC2BFD /* Augustus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Augustus.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,6 +61,7 @@
 		3FF21A071B6D2D8D00394C5F /* PopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverViewController.swift; sourceTree = "<group>"; };
 		3FF21A081B6D2D8D00394C5F /* PopoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopoverViewController.xib; sourceTree = "<group>"; };
 		3FF9ED221B5C38710019328E /* AUDateViewLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUDateViewLabel.swift; sourceTree = "<group>"; };
+		3FFB2D571B95440D000F0254 /* AUCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AUCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +85,9 @@
 		3FE17BBF1B38E92200EC2BFD = {
 			isa = PBXGroup;
 			children = (
+				3F8656201B97E9D500B61B1D /* AUEventInfo.swift */,
+				3F86561E1B97DE2500B61B1D /* AUCoreData.swift */,
+				3FFB2D561B95440D000F0254 /* AUCoreDataModel.xcdatamodeld */,
 				3FA6F9D61B76728100FBDF9C /* AULog.swift */,
 				3FA6F9D31B75868300FBDF9C /* AUEventStoreInEK.swift */,
 				3FE17BED1B38EA2200EC2BFD /* AUModel.swift */,
@@ -245,10 +257,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F8656211B97E9D500B61B1D /* AUEventInfo.swift in Sources */,
 				3FE17BD01B38E92200EC2BFD /* ViewController.swift in Sources */,
+				3F86561F1B97DE2500B61B1D /* AUCoreData.swift in Sources */,
 				3F75A2EA1B69254A004E878F /* AUDateView.swift in Sources */,
 				3FE17BEE1B38EA2200EC2BFD /* AUModel.swift in Sources */,
 				3FF9ED231B5C38710019328E /* AUDateViewLabel.swift in Sources */,
+				3FFB2D581B95440D000F0254 /* AUCoreDataModel.xcdatamodeld in Sources */,
 				3FF21A091B6D2D8D00394C5F /* PopoverViewController.swift in Sources */,
 				3FA6F9D41B75868300FBDF9C /* AUEventStoreInEK.swift in Sources */,
 				3FE17BCE1B38E92200EC2BFD /* AppDelegate.swift in Sources */,
@@ -261,10 +276,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F6533251B991F98000D9BCF /* AUCoreData.swift in Sources */,
+				3F8656221B97E9D500B61B1D /* AUEventInfo.swift in Sources */,
 				3FA6F9D51B75868300FBDF9C /* AUEventStoreInEK.swift in Sources */,
 				3FE17BE11B38E92200EC2BFD /* AugustusTests.swift in Sources */,
 				3FA6F9D81B76728100FBDF9C /* AULog.swift in Sources */,
 				3FE17BEF1B38EA2200EC2BFD /* AUModel.swift in Sources */,
+				3FFB2D591B95440D000F0254 /* AUCoreDataModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +484,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3FFB2D561B95440D000F0254 /* AUCoreDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3FFB2D571B95440D000F0254 /* AUCoreDataModel.xcdatamodel */,
+			);
+			currentVersion = 3FFB2D571B95440D000F0254 /* AUCoreDataModel.xcdatamodel */;
+			path = AUCoreDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 3FE17BC01B38E92200EC2BFD /* Project object */;
 }

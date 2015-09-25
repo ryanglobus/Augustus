@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Cocoa
 
 struct AUModel {
     static let calendar = NSCalendar.currentCalendar()
@@ -28,6 +29,7 @@ protocol AUEvent {
     var description: String { get }
     var date: NSDate { get }
     var creationDate: NSDate? { get }
+    var color: NSColor {get set}
 }
 
 struct AUWeek { // TODO let user choose start on Sunday/Monday
@@ -78,7 +80,7 @@ protocol AUEventStore {
     var permission: AUEventStorePermission { get }
     
     /// returns true upon success, false upon failure
-    mutating func addEventOnDate(date: NSDate, description: String) -> Bool
+    mutating func addEventOnDate(date: NSDate, description: String) -> AUEvent?
     
     /// returns true if an event is removed, false upon failure or if no event is removed
     mutating func removeEvent(event: AUEvent) -> Bool
@@ -97,18 +99,27 @@ struct AUEventStoreInMemory: AUEventStore {
         let description: String
         let date: NSDate
         let creationDate: NSDate?
+        var color: NSColor
+        
+        init(id: String, description: String, date: NSDate, creationDate: NSDate?) {
+            self.id = id
+            self.description = description
+            self.date = date
+            self.creationDate = creationDate
+            self.color = NSColor.blackColor()
+        }
     }
     
     private var dateEventDictionary = Dictionary<NSDate, Array<AUEvent>>()
     
     let permission: AUEventStorePermission = .Granted
     
-    mutating func addEventOnDate(date: NSDate, description: String) -> Bool {
+    mutating func addEventOnDate(date: NSDate, description: String) -> AUEvent? {
         let event = AUEventInMemory(id: NSUUID().UUIDString, description: description, date: date, creationDate: NSDate())
         return self.addEvent(event)
     }
     
-    private mutating func addEvent(event: AUEvent) -> Bool {
+    private mutating func addEvent(event: AUEvent) -> AUEvent? {
         let date = AUModel.beginningOfDate(event.date)
         if var events = dateEventDictionary[date] {
             events.append(event)
@@ -116,7 +127,7 @@ struct AUEventStoreInMemory: AUEventStore {
         } else {
             dateEventDictionary.updateValue([event], forKey: date)
         }
-        return true
+        return event
     }
     
     // inefficient, but whatever

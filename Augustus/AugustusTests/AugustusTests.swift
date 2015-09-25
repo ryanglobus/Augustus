@@ -48,6 +48,42 @@ class AugustusTests: XCTestCase {
 
     }
     
+    func testCoreData() {
+        // setup
+        let model = NSManagedObjectModel.mergedModelFromBundles(NSBundle.allBundles())
+        XCTAssert(model != nil, "model is not nil")
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model!)
+        let store = try? coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
+        XCTAssert(store != nil, "store is not nil")
+        let context: NSManagedObjectContext = NSManagedObjectContext()
+        context.persistentStoreCoordinator = coordinator
+        
+        // create
+        let eventInfo: NSManagedObject = NSEntityDescription.insertNewObjectForEntityForName("AUEventInfo", inManagedObjectContext: context)
+        eventInfo.setValue("1", forKey: "id")
+        eventInfo.setValue(NSColor.redColor(), forKey: "color")
+        let error = NSErrorPointer()
+        do {
+            try context.save()
+        } catch let error as NSError {
+            XCTFail(error.debugDescription)
+        }
+        
+        // read
+        let request = NSFetchRequest()
+        let entityDescription = NSEntityDescription.entityForName("AUEventInfo", inManagedObjectContext: context)
+        request.entity = entityDescription
+        let results = try? context.executeFetchRequest(request)
+        if results == nil {
+            XCTFail(error.debugDescription)
+        }
+        for result in results! {
+            XCTAssert(result is AUEventInfo, "result is AUEventInfo")
+            XCTAssert((result as! AUEventInfo).color == NSColor.redColor(), "color is red")
+        }
+//        XCTAssert(<#expression: BooleanType#>, <#message: String#>)
+    }
+    
 //    func testPerformanceExample() {
 //        // This is an example of a performance test case.
 //        self.measureBlock() {

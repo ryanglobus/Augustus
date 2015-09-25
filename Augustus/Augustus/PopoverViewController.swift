@@ -24,6 +24,16 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
+    var color: NSColor? {
+        get {
+            return self.colorPicker?.color
+        } set {
+            if let nval = newValue {
+                self.colorPicker?.color = nval
+            }
+        }
+    }
+    
     private(set) var event: AUEvent?
     var mode: Mode {
         get {
@@ -39,6 +49,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     @IBOutlet weak var datePicker: NSDatePicker?
     var popover: NSPopover? = nil // TODO hack
     @IBOutlet weak var addEventButton: NSButton? // TODO rename
+    @IBOutlet weak var colorPicker: NSColorWell?
 
     static func newInstance() -> PopoverViewController? { // TODO hack
         let pvc = PopoverViewController(nibName: "PopoverViewController", bundle: NSBundle(identifier: "Augustus"))
@@ -65,10 +76,16 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
                 if let date = datePicker?.dateValue {
                     switch self.mode {
                     case .AddMode:
-                        AUModel.eventStore.addEventOnDate(date, description: description)
+                        var event = AUModel.eventStore.addEventOnDate(date, description: description)
+                        if let color = self.color {
+                            event?.color = color
+                        }
                     case .EditMode:
-                        if let event = self.event {
+                        if var event = self.event {
                             AUModel.eventStore.editEvent(event, newDate: date, newDescription: description)
+                            if let color = self.color {
+                                event.color = color
+                            }
                         }
                     }
                 }
@@ -78,7 +95,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     }
     
     @IBAction func close(sender: AnyObject) {
-        self.popover?.performClose(self)
+        self.popover?.performClose(self) // TODO close color palette as well
     }
     
     func setModeToAdd() {
@@ -91,6 +108,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         self.event = event
         self.date = event.date
         self.eventDescriptionField?.stringValue = event.description
+        self.color = event.color
         self.addEventButton?.title = "Edit Event"
     }
     

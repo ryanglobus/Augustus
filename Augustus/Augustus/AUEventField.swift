@@ -59,6 +59,7 @@ class AUEventField: NSTextField {
         self.bezeled = false
         self.drawsBackground = false
         self.selectable = false
+        self.textColor = event.color
     }
 
     required init?(coder: NSCoder) {

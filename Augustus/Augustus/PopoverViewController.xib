@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PopoverViewController" customModule="Augustus" customModuleProvider="target">
             <connections>
                 <outlet property="addEventButton" destination="oMP-Yz-Jqj" id="4C9-gc-Szo"/>
+                <outlet property="colorPicker" destination="YUM-iC-IlX" id="De0-w7-sr9"/>
                 <outlet property="datePicker" destination="KWP-CL-Mer" id="5ef-oa-bwc"/>
                 <outlet property="eventDescriptionField" destination="JUp-Je-4Ji" id="6cc-oT-ya7"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
@@ -15,7 +16,7 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="-5" width="254" height="230"/>
+            <rect key="frame" x="0.0" y="0.0" width="254" height="230"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oMP-Yz-Jqj">
@@ -43,7 +44,7 @@
                     <datePickerCell key="cell" borderStyle="bezel" alignment="left" datePickerStyle="clockAndCalendar" id="axP-MY-cUF">
                         <font key="font" metaFont="system"/>
                         <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
-                            <!--1982-02-12 16:00:00 +0000-->
+                            <!--1982-02-12 08:00:00 -0800-->
                             <timeZone key="timeZone" name="US/Pacific"/>
                         </calendarDate>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -51,13 +52,17 @@
                     </datePickerCell>
                 </datePicker>
                 <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JUp-Je-4Ji">
-                    <rect key="frame" x="7" y="197" width="240" height="22"/>
+                    <rect key="frame" x="7" y="197" width="195" height="22"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" borderStyle="bezel" alignment="center" placeholderString="Event Title" drawsBackground="YES" id="943-Ip-nkq">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YUM-iC-IlX">
+                    <rect key="frame" x="203" y="196" width="44" height="23"/>
+                    <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </colorWell>
             </subviews>
             <point key="canvasLocation" x="468" y="323"/>
         </customView>
