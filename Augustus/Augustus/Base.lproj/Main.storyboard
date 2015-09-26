@@ -322,7 +322,7 @@ CA
                                     <size key="minSize" width="116" height="25"/>
                                     <size key="maxSize" width="116" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="pEN-XH-M6K">
-                                        <rect key="frame" x="0.0" y="0.0" width="116" height="25"/>
+                                        <rect key="frame" x="0.0" y="14" width="116" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="roundTextured" title="Today" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Y4B-2i-vTr">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -338,7 +338,7 @@ CA
                                     <size key="minSize" width="25" height="25"/>
                                     <size key="maxSize" width="25" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="aSP-em-bqf">
-                                        <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                        <rect key="frame" x="0.0" y="14" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="roundTextured" title="&lt;" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3d0-Kp-TWE">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -354,7 +354,7 @@ CA
                                     <size key="minSize" width="25" height="25"/>
                                     <size key="maxSize" width="25" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="6FA-oC-X8k">
-                                        <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                        <rect key="frame" x="0.0" y="14" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="roundTextured" title="&gt;" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pxu-2y-HTh">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -370,7 +370,7 @@ CA
                                     <size key="minSize" width="38" height="25"/>
                                     <size key="maxSize" width="160" height="25"/>
                                     <textField key="view" identifier="toolbar-month-year-label" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z6e-zl-2eU">
-                                        <rect key="frame" x="6" y="15" width="38" height="25"/>
+                                        <rect key="frame" x="0.0" y="14" width="38" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="L" id="uf2-sW-KHg">
                                             <font key="font" metaFont="system" size="20"/>
@@ -384,7 +384,7 @@ CA
                                     <size key="minSize" width="25" height="25"/>
                                     <size key="maxSize" width="25" height="25"/>
                                     <button key="view" identifier="add-event-button" verticalHuggingPriority="750" id="bnF-sw-QF0">
-                                        <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                        <rect key="frame" x="0.0" y="14" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="roundTextured" title="+" bezelStyle="texturedRounded" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="oAN-3Q-Zlb">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -394,6 +394,15 @@ CA
                                     <connections>
                                         <action selector="requestNewEvent:" target="Oky-zY-oP4" id="0fB-HF-mzG"/>
                                     </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="3354616A-9E08-4BBF-9469-803806E89E9F" label="" paletteLabel="" tag="-1" id="YIn-qF-xg8">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="16" height="16"/>
+                                    <size key="maxSize" width="16" height="16"/>
+                                    <progressIndicator key="view" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="tuu-Yk-ID4">
+                                        <rect key="frame" x="0.0" y="14" width="16" height="16"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </progressIndicator>
                                 </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
@@ -405,6 +414,7 @@ CA
                                 <toolbarItem reference="FdF-Dp-Jap"/>
                                 <toolbarItem reference="959-e7-6fh"/>
                                 <toolbarItem reference="8hu-Ar-VyK"/>
+                                <toolbarItem reference="YIn-qF-xg8"/>
                                 <toolbarItem reference="jHj-Za-LeA"/>
                                 <toolbarItem reference="NtJ-AL-rTc"/>
                                 <toolbarItem reference="U2p-t0-GCn"/>

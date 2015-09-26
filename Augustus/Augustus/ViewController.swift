@@ -18,7 +18,9 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     var popoverViewController: PopoverViewController?
     var selectedEventField: AUEventField?
     var addEventButton: NSButton?
+    private var progressIndicator: NSProgressIndicator?
     private var scrollView: NSScrollView?
+    private var numLoadEventTasks = 0
     var week: AUWeek = AUWeek() {
         didSet {
             self.refresh(newWeek: true)
@@ -67,6 +69,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
                     if "add-event-button" == button.identifier {
                         self.addEventButton = button
                     }
+                }
+                if let progressIndicator = view as? NSProgressIndicator {
+                    self.progressIndicator = progressIndicator
+                    self.progressIndicator?.hidden = true
                 }
             }
         }
@@ -232,6 +238,9 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             view.events = []
         }
         let week = self.week
+        self.numLoadEventTasks++
+        self.progressIndicator?.startAnimation(self)
+        self.progressIndicator?.hidden = false
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             let weekEvents = AUModel.eventStore.eventsForWeek(week)
             dispatch_async(dispatch_get_main_queue()) {
@@ -241,6 +250,11 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
                     }
                 }
                 self.adjustScrollViewHeight(newWeek: newWeek)
+                self.numLoadEventTasks--
+                if self.numLoadEventTasks == 0 {
+                    self.progressIndicator?.hidden = true
+                    self.progressIndicator?.stopAnimation(self)
+                }
             }
         }
     }
