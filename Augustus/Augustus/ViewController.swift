@@ -70,7 +70,18 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
                 }
             }
         }
+        
+        // setting titleVisibility to Hidden doesn't resize window/view properly
+        // so must manually reduce window height
+        let viewFrame = self.view.frame
+        var windowFrame_ = self.view.window?.frame
+        windowFrame_?.size.height -= 32 // the height of the title we're about to remove
         self.view.window?.titleVisibility = .Hidden
+        if let windowFrame = windowFrame_ {
+            self.view.window?.setFrame(windowFrame, display: true, animate: true)
+        }
+        self.view.setFrameOrigin(viewFrame.origin)
+        self.view.setFrameSize(viewFrame.size)
         self.popoverViewController = PopoverViewController.newInstance()
     }
 
@@ -80,7 +91,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         }
     }
     
-    
+
     
     // TODO unselect when add event
     func select(eventField: AUEventField) {
