@@ -96,6 +96,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     
     @IBAction func close(sender: AnyObject) {
         self.popover?.performClose(self) // TODO close color palette as well
+        NSColorPanel.sharedColorPanel().close()
     }
     
     func setModeToAdd() {

@@ -30,7 +30,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let window = NSApplication.sharedApplication().windows[0]
+        let window = NSApplication.sharedApplication().windows[0] // TODO bold assumption
         window.delegate = self
         
         if (self.scrollView == nil) {
