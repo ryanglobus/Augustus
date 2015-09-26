@@ -29,7 +29,15 @@ struct AUCoreData {
             return nil
         }
         // TODO sketchy
-        let sqlUrl = supportDirectories[0].URLByAppendingPathComponent("db.sqlite")
+        let supportDirectory = supportDirectories[0]
+        let augustusDirectory = supportDirectory.URLByAppendingPathComponent("Augustus")
+        do {
+            try NSFileManager.defaultManager().createDirectoryAtURL(augustusDirectory, withIntermediateDirectories: true, attributes: nil)
+        } catch let error as NSError {
+            self.log.error?(error.debugDescription)
+            return nil
+        }
+        let sqlUrl = supportDirectory.URLByAppendingPathComponent("Augustus/db.sqlite")
         
         guard let model = NSManagedObjectModel(contentsOfURL: momdUrl) else {
             self.log.error?("Could not create NSManagedObjectModel")
