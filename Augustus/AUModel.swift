@@ -92,6 +92,16 @@ protocol AUEventStore {
     
 }
 
+extension AUEventStore {
+    func eventsForWeek(week: AUWeek) -> [NSDate : [AUEvent]] {
+        var dateEvents = Dictionary<NSDate, Array<AUEvent>>()
+        for date in week.dates() {
+            dateEvents[date] = self.eventsForDate(date)
+        }
+        return dateEvents
+    }
+}
+
 
 struct AUEventStoreInMemory: AUEventStore {
     private struct AUEventInMemory: AUEvent {
@@ -174,16 +184,9 @@ struct AUEventStoreInMemory: AUEventStore {
         }
     }
     
-    func eventsForWeek(week: AUWeek) -> [NSDate : [AUEvent]] { // TODO no longer needed
-        var dateEvents = Dictionary<NSDate, Array<AUEvent>>()
-        for date in week.dates() {
-            dateEvents[date] = eventsForDate(date)
-        }
-        return dateEvents
-    }
-    
     mutating func clear() {
         dateEventDictionary.removeAll()
     }
 }
+
 

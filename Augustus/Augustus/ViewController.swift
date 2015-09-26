@@ -226,11 +226,26 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     private func refresh(newWeek newWeek: Bool = false) {
         self.drawMonthYearLabel()
         for i in 0..<AUWeek.numDaysInWeek {
-            let date = week[i]
-            let view = dateViews[i]
+            let date = self.week[i]
+            let view = self.dateViews[i]
             view.date = date
-            view.events = AUModel.eventStore.eventsForDate(date)
+            view.events = []
         }
+        let week = self.week
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+            let weekEvents = AUModel.eventStore.eventsForWeek(week)
+            dispatch_async(dispatch_get_main_queue()) {
+                self.dateViews.forEach() {
+                    if let events = weekEvents[$0.date] {
+                        $0.events = events
+                    }
+                }
+                self.adjustScrollViewHeight(newWeek: newWeek)
+            }
+        }
+    }
+
+    private func adjustScrollViewHeight(newWeek newWeek: Bool = false) {
         if let documentView = self.scrollView?.documentView as? NSView {
             let desiredHeight = dateViews.reduce(AUDateView.size.height) {(minHeight, dateView) in
                 return max(minHeight, dateView.desiredHeight)
