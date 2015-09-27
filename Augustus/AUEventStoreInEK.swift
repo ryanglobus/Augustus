@@ -50,7 +50,7 @@ class AUEventStoreInEK : AUEventStore {
         self.permission = .Pending
         
         NSNotificationCenter.defaultCenter().addObserverForName(EKEventStoreChangedNotification, object: nil, queue: nil) { (notification: NSNotification) in
-            self.log.debug?("Notification from EventKit")
+            self.log.debug("Notification from EventKit")
             NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
         }
         
@@ -60,20 +60,20 @@ class AUEventStoreInEK : AUEventStore {
             
             defer {
                 // notify listeners of model change
-                self.log.debug?("send notification")
+                self.log.debug("send notification")
                 NSNotificationCenter.defaultCenter().postNotificationName(AUModel.notificationName, object: self)
             }
             
             guard success else {
                 self.permission = .Denied
-                self.log.warn?("request to access EKEntityTypeEvents denied")
-                self.log.warn?(error?.description)
+                self.log.warn("request to access EKEntityTypeEvents denied")
+                self.log.warn(error?.description)
                 // TODO gracefully handle this
                 return
             }
             
             self.permission = .Granted
-            self.log.info?("request to access EKEntityTypeEvents granted")
+            self.log.info("request to access EKEntityTypeEvents granted")
             
             // look for calendar
             // TODO remember calendar
@@ -84,7 +84,7 @@ class AUEventStoreInEK : AUEventStore {
                 // TODO make sure iCloud source
                 if calendar.title == "Augustus" { // TODO or unique identifier?
                     self.ekCalendar_ = calendar
-                    self.log.info?("Found calendar with id \(calendar.calendarIdentifier)")
+                    self.log.info("Found calendar with id \(calendar.calendarIdentifier)")
                     break
                 }
             }
@@ -108,7 +108,7 @@ class AUEventStoreInEK : AUEventStore {
             }
             
             guard let ekSource = ekSource_ else {
-                self.log.error?("Failed to find source to create calendar")
+                self.log.error("Failed to find source to create calendar")
                 return
             }
             
@@ -119,10 +119,10 @@ class AUEventStoreInEK : AUEventStore {
             do {
                 try self.ekStore.saveCalendar(calendar, commit: true)
                 self.ekCalendar_ = calendar
-                self.log.info?("Created calendar with id \(calendar.calendarIdentifier)")
+                self.log.info("Created calendar with id \(calendar.calendarIdentifier)")
             } catch let error as NSError {
-                self.log.error?("Failed to create calendar")
-                self.log.error?(error.debugDescription)
+                self.log.error("Failed to create calendar")
+                self.log.error(error.debugDescription)
             }
 
         })
@@ -144,7 +144,7 @@ class AUEventStoreInEK : AUEventStore {
                 try self.ekStore.saveEvent(event, span: EKSpan.ThisEvent, commit: true)
                 return AUEventInEK(ekEvent: event)
             } catch let error as NSError {
-                self.log.error?(error.debugDescription)
+                self.log.error(error.debugDescription)
                 return nil
             }
         }
@@ -162,7 +162,7 @@ class AUEventStoreInEK : AUEventStore {
                 try self.ekStore.removeEvent(ekEvent, span: EKSpan.ThisEvent, commit: true)
                 success = true
             } catch let error as NSError {
-                self.log.error?(error.debugDescription)
+                self.log.error(error.debugDescription)
                 success = false
             }
             return success
@@ -186,7 +186,7 @@ class AUEventStoreInEK : AUEventStore {
                 try self.ekStore.saveEvent(ekEvent, span: EKSpan.ThisEvent, commit: true)
                 success = true
             } catch let error as NSError {
-                self.log.error?(error.debugDescription)
+                self.log.error(error.debugDescription)
                 success = false
             }
             return success

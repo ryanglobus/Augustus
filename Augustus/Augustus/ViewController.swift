@@ -46,7 +46,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.unselect()
         self.refresh() // TODO needed?
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification) in
-            self.log.debug?("refresh!")
+            self.log.debug("refresh!")
             dispatch_async(dispatch_get_main_queue()) {
                 self.refresh()
             }

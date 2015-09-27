@@ -26,12 +26,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             
         })
-        log.info?("did finish launching")
+        log.info("did finish launching")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
-        log.info?("will terminate")
+        log.info("will terminate")
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {
@@ -56,9 +56,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     "end tell"
                 let script = NSAppleScript(source: scriptSource)
                 let error = AutoreleasingUnsafeMutablePointer<NSDictionary?>()
-                self.log.info?("About to go to System Preferences")
+                self.log.info("About to go to System Preferences")
                 if script?.executeAndReturnError(error) == nil {
-                    self.log.error?(error.debugDescription)
+                    self.log.error(error.debugDescription)
                 }
                 // TODO now what?
             } else {
