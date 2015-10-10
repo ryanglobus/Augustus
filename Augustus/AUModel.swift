@@ -71,6 +71,14 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     }
 }
 
+func ==(lhs: AUWeek, rhs: AUWeek) -> Bool {
+    return lhs.firstDate == rhs.firstDate
+}
+
+func !=(lhs: AUWeek, rhs: AUWeek) -> Bool {
+    return !(lhs == rhs)
+}
+
 enum AUEventStorePermission {
     case Granted, Pending, Denied
 }

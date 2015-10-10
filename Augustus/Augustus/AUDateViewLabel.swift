@@ -12,12 +12,17 @@ import AppKit
 class AUDateViewLabel: NSView {
     
     var date: NSDate
-    static let size = CGSize(width: AUDateView.width, height: 50)
+    override var intrinsicContentSize: NSSize {
+        return CGSize(width: AUDateView.width, height: 50)
+    }
     
-    init(date: NSDate, origin: CGPoint) {
-        let frame = NSRect(origin: origin, size: AUDateViewLabel.size)
+    convenience init(date: NSDate) {
+        self.init(date: date, frame: NSRect())
+    }
+    
+    init(date: NSDate, frame frameRect: NSRect) {
         self.date = date
-        super.init(frame: frame)
+        super.init(frame: frameRect)
     }
 
     required init?(coder: NSCoder) {
@@ -42,7 +47,7 @@ class AUDateViewLabel: NSView {
         let path = NSBezierPath()
         // border below
         path.moveToPoint(NSPoint(x: 0, y: 0))
-        path.lineToPoint(NSPoint(x: AUDateViewLabel.size.width, y: 0))
+        path.lineToPoint(NSPoint(x: self.frame.width, y: 0))
         path.lineWidth = 2
         path.stroke()
     }
@@ -51,7 +56,7 @@ class AUDateViewLabel: NSView {
         let dayOfMonth = AUModel.calendar.component(NSCalendarUnit.Day, fromDate: self.date).description
         let dayOfMonthAttributes = [NSFontAttributeName: NSFont.boldSystemFontOfSize(20)]
         let dayOfMonthLabel = NSAttributedString(string: dayOfMonth, attributes: dayOfMonthAttributes)
-        let x = (AUDateViewLabel.size.width - dayOfMonthLabel.size().width) / 2.0
+        let x = (self.frame.width - dayOfMonthLabel.size().width) / 2.0
         dayOfMonthLabel.drawAtPoint(CGPoint(x: x, y: 0))
     }
     
@@ -60,7 +65,7 @@ class AUDateViewLabel: NSView {
         if let dayOfWeek = AUDateViewLabel.nameForDayOfWeek(dayOfWeekNumber) {
             let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
             let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
-            let x = (AUDateViewLabel.size.width - dayOfWeekLabel.size().width) / 2.0
+            let x = (self.frame.width - dayOfWeekLabel.size().width) / 2.0
             dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
         }
     }

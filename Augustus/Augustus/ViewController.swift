@@ -8,6 +8,14 @@
 
 import Cocoa
 
+func -(lhs: NSSize, rhs: NSSize) -> NSSize {
+    return NSSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
+}
+
+func +(lhs: NSSize, rhs: NSSize) -> NSSize {
+    return NSSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+}
+
 class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, AUDateViewDelegate {
     
     // TODO handle event modification failure
@@ -20,6 +28,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     var addEventButton: NSButton?
     private var progressIndicator: NSProgressIndicator?
     private var scrollView: NSScrollView?
+    private var calendarView: AUCalendarView?
     private var numLoadEventTasks = 0
     var week: AUWeek = AUWeek() {
         didSet {
@@ -39,8 +48,11 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             self.scrollView = NSScrollView(frame: self.view.frame)
             self.scrollView?.hasVerticalScroller = true
             self.scrollView?.documentView = NSView(frame: self.scrollView!.frame)
-            self.view.addSubview(scrollView!)
+//            self.view.addSubview(scrollView!)
         }
+        
+        self.calendarView = AUCalendarView(frame: self.view.frame, week: AUWeek())
+        self.view.addSubview(self.calendarView!)
         
         self.addDateViews()
         self.unselect()
@@ -97,6 +109,14 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         }
     }
     
+    func windowWillResize(sender: NSWindow, toSize frameSize: NSSize) -> NSSize {
+        let sizeDiff = frameSize - sender.frame.size
+        if let calendarView = self.calendarView {
+            calendarView.setFrameSize(calendarView.frame.size + sizeDiff)
+        }
+        return frameSize
+    }
+    
 
     
     // TODO unselect when add event
@@ -128,9 +148,9 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     // TODO don't show datePicker
     func requestNewEventForDateView(dateView: AUDateView) {
         // TODO unselect?
-        let dateViewLabel = dateView.viewLabel
-        let rect = NSRect(origin: CGPoint.zero, size: dateViewLabel.frame.size)
-        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSRectEdge.MaxY)
+//        let dateViewLabel = dateView.viewLabel
+//        let rect = NSRect(origin: CGPoint.zero, size: dateViewLabel.frame.size)
+//        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSRectEdge.MaxY)
         self.popoverViewController?.setModeToAdd()
         self.popoverViewController?.date = dateView.date
     }
@@ -204,7 +224,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         var i = 0
         let dates = self.week.dates()
         for date in dates {
-            let x = Double(AUDateViewLabel.size.width) * Double(i)
+            let x = Double(AUDateView.size.width) * Double(i)
             let origin = CGPoint(x: x, y: 0)
 //            let events = AUModel.eventStore.eventsForDate(date)
             let withRightBorder = (i != dates.count - 1)
@@ -237,6 +257,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             view.date = date
             view.events = []
         }
+        self.calendarView?.week = self.week
         let week = self.week
         self.numLoadEventTasks++
         self.progressIndicator?.startAnimation(self)
