@@ -1,5 +1,5 @@
 //
-//  AUDateView.swift
+//  AUEventView.swift
 //  Augustus
 //
 //  Created by Ryan Globus on 7/29/15.
@@ -8,23 +8,22 @@
 
 import Cocoa
 
-class AUDateView: NSView {
+class AUEventView: NSView {
     static let eventMargin: CGFloat = 5
     static let width = CGFloat(150)
     static let heightForEvents = CGFloat(450)
     // TODO 450 const in multiple places
-    static let size = CGSize(width: AUDateView.width, height: 50 + AUDateView.heightForEvents)
+    static let size = CGSize(width: AUEventView.width, height: 50 + AUEventView.heightForEvents)
     
     private let log = AULog.instance
-    let controller: ViewController
     let withRightBorder: Bool
 //    let viewLabel: AUDateViewLabel
-    var auDelegate: AUDateViewDelegate?
-    
-    var date: NSDate {
+    var auDelegate: AUEventViewDelegate?
+    var eventFieldDelegate: AUEventFieldDelegate? {
         didSet {
-//            viewLabel.date = self.date
-//            viewLabel.needsDisplay = true
+            for eventView in self.eventViews {
+                eventView.auDelegate = self.eventFieldDelegate
+            }
         }
     }
     
@@ -40,10 +39,10 @@ class AUDateView: NSView {
                 }
                 return compareResult == .OrderedAscending
             }
-            self.eventViews = events.map({ (event) -> NSView in
+            self.eventViews = events.map({ (event) -> AUEventField in
                 // TODO fix height constraint
-                let eventField = AUEventField(origin: CGPoint.zero, width: AUDateView.size.width, event: event)
-                eventField.auDelegate = self.controller
+                let eventField = AUEventField(origin: CGPoint.zero, width: AUEventView.size.width, event: event)
+                eventField.auDelegate = self.eventFieldDelegate
                 return eventField
             })
         }
@@ -65,13 +64,13 @@ class AUDateView: NSView {
     var desiredHeight: CGFloat {
         get {
             let eventHeight = eventViews.reduce(0) {(totalHeight, eventView) in
-                return totalHeight + eventView.frame.height + AUDateView.eventMargin
+                return totalHeight + eventView.frame.height + AUEventView.eventMargin
             }
-            return max(eventHeight + 0/*self.viewLabel.frame.height*/, AUDateView.size.height)
+            return max(eventHeight + 0/*self.viewLabel.frame.height*/, AUEventView.size.height)
         }
     }
     
-    private var eventViews: [NSView] = [] {
+    private var eventViews: [AUEventField] = [] {
         didSet(oldEventViews) {
             for oldView in oldEventViews {
                 oldView.removeFromSuperview()
@@ -79,7 +78,7 @@ class AUDateView: NSView {
             
             var y = self.frame.height// - self.viewLabel.frame.height
             for view in self.eventViews {
-                y -= view.frame.size.height + AUDateView.eventMargin
+                y -= view.frame.size.height + AUEventView.eventMargin
                 view.frame.origin.y = y
                 self.addSubview(view)
             }
@@ -87,13 +86,11 @@ class AUDateView: NSView {
     }
     
     
-    init(controller: ViewController, date: NSDate, origin: CGPoint, withRightBorder: Bool = true) {
-        self.controller = controller
-        self.date = date
+    init(origin: CGPoint, withRightBorder: Bool = true) {
 //        self.viewLabel = AUDateViewLabel(date: date, origin: CGPoint(x: 0, y: AUDateView.heightForEvents))
         self.withRightBorder = withRightBorder
         
-        let frame = NSRect(origin: origin, size: AUDateView.size)
+        let frame = NSRect(origin: origin, size: AUEventView.size)
         super.init(frame: frame)
         
         //self.addSubview(viewLabel)
@@ -130,8 +127,8 @@ class AUDateView: NSView {
     
 }
 
-@objc protocol AUDateViewDelegate {
-    optional func selectDateView(dateView: AUDateView)
+@objc protocol AUEventViewDelegate {
+    optional func selectDateView(dateView: AUEventView)
     
-    optional func requestNewEventForDateView(dateView: AUDateView)
+    optional func requestNewEventForDateView(dateView: AUEventView)
 }

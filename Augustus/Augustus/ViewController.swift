@@ -16,12 +16,12 @@ func +(lhs: NSSize, rhs: NSSize) -> NSSize {
     return NSSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
-class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, AUDateViewDelegate {
+class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, AUEventViewDelegate {
     
     // TODO handle event modification failure
     
     private let log = AULog.instance
-    var dateViews: [AUDateView] = []
+//    var dateViews: [AUEventView] = []
     var monthYearLabel: NSTextField?
     var popoverViewController: PopoverViewController?
     var selectedEventField: AUEventField?
@@ -54,7 +54,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.calendarView = AUCalendarView(frame: self.view.frame, week: AUWeek())
         self.view.addSubview(self.calendarView!)
         
-        self.addDateViews()
+//        self.addDateViews()
         self.unselect()
         self.refresh() // TODO needed?
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification) in
@@ -126,10 +126,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.selectedEventField = eventField
     }
     
-    func selectDateView(dateView: AUDateView) {
+    func selectDateView(dateView: AUEventView) {
         self.unselect()
         self.popoverViewController?.close(dateView)
-        self.popoverViewController?.date = dateView.date // TODO make this do something
+//        self.popoverViewController?.date = dateView.date // TODO make this do something
     }
     
     func unselect() { // TODO better, call more often
@@ -146,13 +146,13 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     }
     
     // TODO don't show datePicker
-    func requestNewEventForDateView(dateView: AUDateView) {
+    func requestNewEventForDateView(dateView: AUEventView) {
         // TODO unselect?
 //        let dateViewLabel = dateView.viewLabel
 //        let rect = NSRect(origin: CGPoint.zero, size: dateViewLabel.frame.size)
 //        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSRectEdge.MaxY)
         self.popoverViewController?.setModeToAdd()
-        self.popoverViewController?.date = dateView.date
+//        self.popoverViewController?.date = dateView.date
     }
     
     @IBAction
@@ -219,29 +219,29 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     
     
     
-    private func addDateViews() { // dup code here?
-//        let frameHeight = self.view.frame.height
-        var i = 0
-        let dates = self.week.dates()
-        for date in dates {
-            let x = Double(AUDateView.size.width) * Double(i)
-            let origin = CGPoint(x: x, y: 0)
-//            let events = AUModel.eventStore.eventsForDate(date)
-            let withRightBorder = (i != dates.count - 1)
-            let view = AUDateView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
-            view.auDelegate = self
-            if let documentView = self.scrollView?.documentView as? NSView {
-//                if (view.frame.height > documentView.frame.height) { // TODO no
-//                    log.debug?("Setting doc view height to \(view.frame.height)")
-//                    documentView.setFrameSize(NSSize(width: documentView.frame.width, height: view.frame.height))
-//                }
-                documentView.addSubview(view)
-            }
-//            view.events = events
-            self.dateViews.append(view)
-            i++
-        }
-    }
+//    private func addDateViews() { // dup code here?
+////        let frameHeight = self.view.frame.height
+//        var i = 0
+//        let dates = self.week.dates()
+//        for date in dates {
+//            let x = Double(AUEventView.size.width) * Double(i)
+//            let origin = CGPoint(x: x, y: 0)
+////            let events = AUModel.eventStore.eventsForDate(date)
+//            let withRightBorder = (i != dates.count - 1)
+////            let view = AUEventView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
+//            view.auDelegate = self
+//            if let documentView = self.scrollView?.documentView as? NSView {
+////                if (view.frame.height > documentView.frame.height) { // TODO no
+////                    log.debug?("Setting doc view height to \(view.frame.height)")
+////                    documentView.setFrameSize(NSSize(width: documentView.frame.width, height: view.frame.height))
+////                }
+//                documentView.addSubview(view)
+//            }
+////            view.events = events
+//            self.dateViews.append(view)
+//            i++
+//        }
+//    }
     
     private func drawMonthYearLabel() {
         let df = NSDateFormatter()
@@ -253,9 +253,9 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.drawMonthYearLabel()
         for i in 0..<AUWeek.numDaysInWeek {
             let date = self.week[i]
-            let view = self.dateViews[i]
-            view.date = date
-            view.events = []
+//            let view = self.dateViews[i]
+//            view.date = date
+//            view.events = []
         }
         self.calendarView?.week = self.week
         let week = self.week
@@ -265,12 +265,12 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             let weekEvents = AUModel.eventStore.eventsForWeek(week)
             dispatch_async(dispatch_get_main_queue()) {
-                self.dateViews.forEach() {
-                    if let events = weekEvents[$0.date] {
-                        $0.events = events
-                    }
-                }
-                self.adjustScrollViewHeight(newWeek: newWeek)
+//                self.dateViews.forEach() {
+////                    if let events = weekEvents[$0.date] {
+////                        $0.events = events
+////                    }
+//                }
+//                self.adjustScrollViewHeight(newWeek: newWeek)
                 self.numLoadEventTasks--
                 if self.numLoadEventTasks == 0 {
                     self.progressIndicator?.hidden = true
@@ -280,32 +280,32 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         }
     }
 
-    private func adjustScrollViewHeight(newWeek newWeek: Bool = false) {
-        if let documentView = self.scrollView?.documentView as? NSView {
-            let desiredHeight = dateViews.reduce(AUDateView.size.height) {(minHeight, dateView) in
-                return max(minHeight, dateView.desiredHeight)
-            }
-            let delta = desiredHeight - documentView.frame.height
-            
-            for dateView in dateViews {
-                dateView.height = desiredHeight
-            }
-            documentView.setFrameSize(NSSize(width: documentView.frame.width, height: desiredHeight))
-            
-            if let contentView = self.scrollView?.contentView {
-                let y: CGFloat
-                if newWeek {
-                    y = documentView.frame.height - contentView.documentVisibleRect.height
-                } else {
-                    y = max(contentView.documentVisibleRect.origin.y + delta, 0)
-                }
-                // TODO only go to top if new week
-                let newScrollPoint = NSPoint(x: contentView.documentVisibleRect.origin.x, y: y)
-                self.scrollView?.contentView.scrollToPoint(newScrollPoint)
-                self.scrollView?.reflectScrolledClipView(contentView)
-            }
-        }
-    }
+//    private func adjustScrollViewHeight(newWeek newWeek: Bool = false) {
+//        if let documentView = self.scrollView?.documentView as? NSView {
+//            let desiredHeight = dateViews.reduce(AUEventView.size.height) {(minHeight, dateView) in
+//                return max(minHeight, dateView.desiredHeight)
+//            }
+//            let delta = desiredHeight - documentView.frame.height
+//            
+//            for dateView in dateViews {
+//                dateView.height = desiredHeight
+//            }
+//            documentView.setFrameSize(NSSize(width: documentView.frame.width, height: desiredHeight))
+//            
+//            if let contentView = self.scrollView?.contentView {
+//                let y: CGFloat
+//                if newWeek {
+//                    y = documentView.frame.height - contentView.documentVisibleRect.height
+//                } else {
+//                    y = max(contentView.documentVisibleRect.origin.y + delta, 0)
+//                }
+//                // TODO only go to top if new week
+//                let newScrollPoint = NSPoint(x: contentView.documentVisibleRect.origin.x, y: y)
+//                self.scrollView?.contentView.scrollToPoint(newScrollPoint)
+//                self.scrollView?.reflectScrolledClipView(contentView)
+//            }
+//        }
+//    }
 
 
 }

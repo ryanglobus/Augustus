@@ -9,11 +9,11 @@
 import Cocoa
 import AppKit
 
-class AUDateViewLabel: NSView {
+class AUDateLabel: NSView {
     
     var date: NSDate
     override var intrinsicContentSize: NSSize {
-        return CGSize(width: AUDateView.width, height: 50)
+        return CGSize(width: AUEventView.width, height: 50)
     }
     
     convenience init(date: NSDate) {
@@ -62,7 +62,7 @@ class AUDateViewLabel: NSView {
     
     private func drawDayOfWeek() {
         let dayOfWeekNumber = AUModel.calendar.component(NSCalendarUnit.Weekday, fromDate: self.date)
-        if let dayOfWeek = AUDateViewLabel.nameForDayOfWeek(dayOfWeekNumber) {
+        if let dayOfWeek = AUDateLabel.nameForDayOfWeek(dayOfWeekNumber) {
             let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
             let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
             let x = (self.frame.width - dayOfWeekLabel.size().width) / 2.0
