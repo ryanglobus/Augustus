@@ -11,7 +11,7 @@ import Cocoa
 class AUEventView: NSView {
     static let eventMargin: CGFloat = 5
     static let width = CGFloat(150)
-    static let heightForEvents = CGFloat(450)
+    static let heightForEvents = CGFloat(50)
     // TODO 450 const in multiple places
     static let size = CGSize(width: AUEventView.width, height: 50 + AUEventView.heightForEvents)
     
@@ -119,8 +119,7 @@ class AUEventView: NSView {
         let path = NSBezierPath()
         // border to the right
         path.moveToPoint(NSPoint(x: self.frame.width, y: 0))
-        log.debug(self.frame.height)
-        //path.lineToPoint(NSPoint(x: self.frame.width, y: self.frame.height - self.viewLabel.frame.height))
+        path.lineToPoint(NSPoint(x: self.frame.width, y: self.frame.height))
         path.lineWidth = 2
         path.stroke()
     }

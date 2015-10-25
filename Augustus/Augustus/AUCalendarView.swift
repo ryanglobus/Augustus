@@ -56,7 +56,7 @@ class AUCalendarView: NSView {
                 // y
                 NSLayoutConstraint(item: label, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0),
                 // width
-                NSLayoutConstraint(item: label, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: CGFloat(1.0) / CGFloat(self.week.dates().count), constant: 0),
+                NSLayoutConstraint(item: label, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: CGFloat(1.0) / CGFloat(AUWeek.numDaysInWeek), constant: 0),
                 // height uses intrinsic size
             ]
             self.addConstraints(constraints)
@@ -70,29 +70,28 @@ class AUCalendarView: NSView {
         self.scrollView.documentView = eventViewCollection
         self.scrollView.hasVerticalScroller = true
         self.addSubview(self.scrollView)
-        
-        
+        self.addScrollViewConstraints(firstLabel: label)
+        self.addEventViewCollectionConstraints(eventViewCollection)
+    }
+    
+    private func addScrollViewConstraints(firstLabel label: AUDateLabel) {
         let leftConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
         let topConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Top, relatedBy: .Equal, toItem: label, attribute: .Bottom, multiplier: 1, constant: 0)
         let bottomConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1, constant: 0)
         let widthConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([leftConstraint, topConstraint, bottomConstraint, widthConstraint])
-        
-        // TODO below should be separate method
-        let xleftConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
-        let xtopConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
+    }
+    
+    private func addEventViewCollectionConstraints(eventViewCollection: AUEventViewCollection) {
+        let leftConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
         // TODO below is too wide
-        let xwidthConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
+        let heightConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: self.scrollView, attribute: .Height, multiplier: 1, constant: 0)
         eventViewCollection.translatesAutoresizingMaskIntoConstraints = false
-        self.addConstraints([xleftConstraint, xtopConstraint, xwidthConstraint])
+        self.addConstraints([leftConstraint, topConstraint, widthConstraint, heightConstraint])
         
-//        let leftConstraint = NSLayoutConstraint(item: self.scrollView.contentView, attribute: NSLayoutAttribute.Left, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.Left, multiplier: 1, constant: 0)
-//        let topConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: self.scrollView.contentView, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: 0) // TODO isn't this swapped?
-//        let widthConstraint = NSLayoutConstraint(item: self.scrollView.contentView, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: 0)
-//        let bottomConstraint = NSLayoutConstraint(item: self.scrollView.contentView, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: 0)
-//        
-//        self.addConstraints([leftConstraint, topConstraint, widthConstraint, bottomConstraint])
     }
 
     required init?(coder: NSCoder) {
@@ -116,17 +115,33 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
     
     private func addEventViews() {
         var constraints: [NSLayoutConstraint] = []
+        var previousEventView_: AUEventView? = nil
         for i in 1...AUWeek.numDaysInWeek {
             let eventView = AUEventView(origin: CGPoint.zero, withRightBorder: i < AUWeek.numDaysInWeek)
             self.addSubview(eventView)
+            eventView.translatesAutoresizingMaskIntoConstraints = false
+            addConstraintsToEventView(eventView, withPreviousEventView_: previousEventView_)
             
             let heightConstraint = NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: eventView, attribute: .Height, multiplier: 1, constant: 0)
             heightConstraint.priority = NSLayoutPriorityRequired
             constraints.append(heightConstraint)
+            
+            previousEventView_ = eventView
         }
-        let asShortAsPossibleConstraint = NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: nil, attribute: .Height, multiplier: 0, constant: 0)
-        asShortAsPossibleConstraint.priority = NSLayoutPriorityFittingSizeCompression // TODO ?
-        constraints.append(asShortAsPossibleConstraint)
         self.addConstraints(constraints)
+    }
+    
+    private func addConstraintsToEventView(eventView: AUEventView, withPreviousEventView_: AUEventView?) {
+        let xConstraint: NSLayoutConstraint
+        if let previousEventView = withPreviousEventView_ {
+            xConstraint = NSLayoutConstraint(item: eventView, attribute: .Left, relatedBy: .Equal, toItem: previousEventView, attribute: .Right, multiplier: 1, constant: 0)
+        } else {
+            xConstraint = NSLayoutConstraint(item: eventView, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
+        }
+        let yConstraint = NSLayoutConstraint(item: eventView, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: eventView, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: CGFloat(1.0) / CGFloat(AUWeek.numDaysInWeek), constant: 0)
+        let minHeightConstraint = NSLayoutConstraint(item: eventView, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: self, attribute: .Height, multiplier: 1, constant: 0)
+        
+        self.addConstraints([xConstraint, yConstraint, widthConstraint, minHeightConstraint])
     }
 }
