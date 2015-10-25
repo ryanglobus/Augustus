@@ -62,28 +62,11 @@ class AUDateLabel: NSView {
     
     private func drawDayOfWeek() {
         let dayOfWeekNumber = AUModel.calendar.component(NSCalendarUnit.Weekday, fromDate: self.date)
-        if let dayOfWeek = AUDateLabel.nameForDayOfWeek(dayOfWeekNumber) {
-            let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
-            let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
-            let x = (self.frame.width - dayOfWeekLabel.size().width) / 2.0
-            dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
-        }
-    }
-    
-    private static func nameForDayOfWeek(dayOfWeek: Int) -> String? {
-        // TODO not robust
-        switch(dayOfWeek) {
-            case 1: return "Sunday"
-            case 2: return "Monday"
-            case 3: return "Tuesday"
-            case 4: return "Wednesday"
-            case 5: return "Thursday"
-            case 6: return "Friday"
-            case 7: return "Saturday"
-            default:
-                Swift.print("Invalid day of week: %i", dayOfWeek)
-                return nil
-        }
+        let dayOfWeek = AUModel.calendar.weekdaySymbols[dayOfWeekNumber - 1]
+        let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
+        let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
+        let x = (self.frame.width - dayOfWeekLabel.size().width) / 2.0
+        dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
     }
     
 }

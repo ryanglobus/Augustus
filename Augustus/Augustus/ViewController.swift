@@ -221,9 +221,6 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     
     private func refresh(newWeek newWeek: Bool = false) {
         self.drawMonthYearLabel()
-        for i in 0..<AUWeek.numDaysInWeek {
-            let date = self.week[i]
-        }
         self.calendarView?.week = self.week
         self.calendarView?.eventsForWeek = [:]
         let week = self.week
