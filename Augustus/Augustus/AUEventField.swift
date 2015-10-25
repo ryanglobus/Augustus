@@ -14,6 +14,7 @@ class AUEventField: NSTextField {
     var eventValue: AUEvent {
         didSet {
             self.stringValue = self.eventValue.description
+            self.invalidateIntrinsicContentSize()
         }
     }
     var selected = false {
