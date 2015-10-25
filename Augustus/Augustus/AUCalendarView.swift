@@ -10,29 +10,52 @@ import Cocoa
 
 class AUCalendarView: NSView {
     
-    var week: AUWeek {
-        didSet {
-            if oldValue != self.week {
-                for i in 0..<self.dateLabels.count {
-                    self.dateLabels[i].date = self.week[i]
-                    self.dateLabels[i].needsDisplay = true
-                }
-            }
-        }
-    }
-    
+    private var eventViewCollection: AUEventViewCollection
     private var dateLabels: [AUDateLabel]
     private var scrollView: NSScrollView
     private let log = AULog.instance
     
+    var week: AUWeek {
+        didSet { self.didSetWeek(oldValue: oldValue) }
+    }
+    
+    // TODO below is wonky
+    /// denormalized from week property; set week first
+    var eventsForWeek: [NSDate: [AUEvent]] {
+        didSet { self.didSetEventsForWeek() }
+    }
+    
     init(frame frameRect: NSRect, week: AUWeek) {
+        self.eventViewCollection = AUEventViewCollection()
         self.week = week
         self.dateLabels = []
         self.scrollView = NSScrollView()
+        self.eventsForWeek = [:]
         super.init(frame: frameRect)
         
         self.addDateLabels()
         self.setupScrollView(firstLabel: self.dateLabels[0])
+    }
+    
+    private func didSetWeek(oldValue oldValue: AUWeek) {
+        if oldValue != self.week {
+            for i in 0..<self.dateLabels.count {
+                self.dateLabels[i].date = self.week[i]
+                self.dateLabels[i].needsDisplay = true
+            }
+        }
+    }
+    
+    private func didSetEventsForWeek() {
+        var events: [[AUEvent]] = []
+        for date in self.week.dates() {
+            if let dateEvents = self.eventsForWeek[date] {
+                events.append(dateEvents)
+            } else {
+                events.append([])
+            }
+        }
+        self.eventViewCollection.events = events
     }
     
     private func addDateLabels() {
@@ -66,12 +89,11 @@ class AUCalendarView: NSView {
     }
     
     private func setupScrollView(firstLabel label: AUDateLabel) { // TODO kinda dumb, but forces date labels to be initialized first
-        let eventViewCollection = AUEventViewCollection()
-        self.scrollView.documentView = eventViewCollection
+        self.scrollView.documentView = self.eventViewCollection
         self.scrollView.hasVerticalScroller = true
         self.addSubview(self.scrollView)
         self.addScrollViewConstraints(firstLabel: label)
-        self.addEventViewCollectionConstraints(eventViewCollection)
+        self.addEventViewCollectionConstraints()
     }
     
     private func addScrollViewConstraints(firstLabel label: AUDateLabel) {
@@ -83,12 +105,12 @@ class AUCalendarView: NSView {
         self.addConstraints([leftConstraint, topConstraint, bottomConstraint, widthConstraint])
     }
     
-    private func addEventViewCollectionConstraints(eventViewCollection: AUEventViewCollection) {
-        let leftConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
-        let topConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
+    private func addEventViewCollectionConstraints() {
+        let leftConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
         // TODO below is too wide
-        let widthConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
-        let heightConstraint = NSLayoutConstraint(item: eventViewCollection, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: self.scrollView, attribute: .Height, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
+        let heightConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: self.scrollView, attribute: .Height, multiplier: 1, constant: 0)
         eventViewCollection.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([leftConstraint, topConstraint, widthConstraint, heightConstraint])
         
@@ -102,15 +124,33 @@ class AUCalendarView: NSView {
 
 private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift?
     private var eventViews: [AUEventView]
+    private let log = AULog.instance
+    
+    var events: [[AUEvent]] {
+        didSet { self.didSetEvents() }
+    }
     
     init() {
         self.eventViews = []
+        self.events = []
         super.init(frame: NSRect())
         self.addEventViews()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func didSetEvents() {
+        guard self.eventViews.count == AUWeek.numDaysInWeek && self.events.count == AUWeek.numDaysInWeek else {
+            self.log.error("There are only \(self.eventViews.count) event views and only \(self.events.count) event arrays, when there should be \(AUWeek.numDaysInWeek) of each")
+            return
+        }
+        
+        for i in 0..<(AUWeek.numDaysInWeek) {
+            self.eventViews[i].events = events[i]
+            self.eventViews[i].needsDisplay = true
+        }
     }
     
     private func addEventViews() {
@@ -127,6 +167,7 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
             constraints.append(heightConstraint)
             
             previousEventView_ = eventView
+            self.eventViews.append(eventView)
         }
         self.addConstraints(constraints)
     }

@@ -213,36 +213,6 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         }
     }
     
-    
-    
-    
-    
-    
-    
-//    private func addDateViews() { // dup code here?
-////        let frameHeight = self.view.frame.height
-//        var i = 0
-//        let dates = self.week.dates()
-//        for date in dates {
-//            let x = Double(AUEventView.size.width) * Double(i)
-//            let origin = CGPoint(x: x, y: 0)
-////            let events = AUModel.eventStore.eventsForDate(date)
-//            let withRightBorder = (i != dates.count - 1)
-////            let view = AUEventView(controller: self, date: date, origin: origin, withRightBorder: withRightBorder)
-//            view.auDelegate = self
-//            if let documentView = self.scrollView?.documentView as? NSView {
-////                if (view.frame.height > documentView.frame.height) { // TODO no
-////                    log.debug?("Setting doc view height to \(view.frame.height)")
-////                    documentView.setFrameSize(NSSize(width: documentView.frame.width, height: view.frame.height))
-////                }
-//                documentView.addSubview(view)
-//            }
-////            view.events = events
-//            self.dateViews.append(view)
-//            i++
-//        }
-//    }
-    
     private func drawMonthYearLabel() {
         let df = NSDateFormatter()
         df.dateFormat = "MMMM yyyy"
@@ -253,11 +223,9 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.drawMonthYearLabel()
         for i in 0..<AUWeek.numDaysInWeek {
             let date = self.week[i]
-//            let view = self.dateViews[i]
-//            view.date = date
-//            view.events = []
         }
         self.calendarView?.week = self.week
+        self.calendarView?.eventsForWeek = [:]
         let week = self.week
         self.numLoadEventTasks++
         self.progressIndicator?.startAnimation(self)
@@ -265,12 +233,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             let weekEvents = AUModel.eventStore.eventsForWeek(week)
             dispatch_async(dispatch_get_main_queue()) {
-//                self.dateViews.forEach() {
-////                    if let events = weekEvents[$0.date] {
-////                        $0.events = events
-////                    }
-//                }
-//                self.adjustScrollViewHeight(newWeek: newWeek)
+                self.calendarView?.eventsForWeek = weekEvents
                 self.numLoadEventTasks--
                 if self.numLoadEventTasks == 0 {
                     self.progressIndicator?.hidden = true
@@ -279,33 +242,6 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
             }
         }
     }
-
-//    private func adjustScrollViewHeight(newWeek newWeek: Bool = false) {
-//        if let documentView = self.scrollView?.documentView as? NSView {
-//            let desiredHeight = dateViews.reduce(AUEventView.size.height) {(minHeight, dateView) in
-//                return max(minHeight, dateView.desiredHeight)
-//            }
-//            let delta = desiredHeight - documentView.frame.height
-//            
-//            for dateView in dateViews {
-//                dateView.height = desiredHeight
-//            }
-//            documentView.setFrameSize(NSSize(width: documentView.frame.width, height: desiredHeight))
-//            
-//            if let contentView = self.scrollView?.contentView {
-//                let y: CGFloat
-//                if newWeek {
-//                    y = documentView.frame.height - contentView.documentVisibleRect.height
-//                } else {
-//                    y = max(contentView.documentVisibleRect.origin.y + delta, 0)
-//                }
-//                // TODO only go to top if new week
-//                let newScrollPoint = NSPoint(x: contentView.documentVisibleRect.origin.x, y: y)
-//                self.scrollView?.contentView.scrollToPoint(newScrollPoint)
-//                self.scrollView?.reflectScrolledClipView(contentView)
-//            }
-//        }
-//    }
 
 
 }
