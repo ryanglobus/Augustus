@@ -157,7 +157,7 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
         var constraints: [NSLayoutConstraint] = []
         var previousEventView_: AUEventView? = nil
         for i in 1...AUWeek.numDaysInWeek {
-            let eventView = AUEventView(origin: CGPoint.zero, withRightBorder: i < AUWeek.numDaysInWeek)
+            let eventView = AUEventView(withRightBorder: i < AUWeek.numDaysInWeek)
             self.addSubview(eventView)
             eventView.translatesAutoresizingMaskIntoConstraints = false
             addConstraintsToEventView(eventView, withPreviousEventView_: previousEventView_)

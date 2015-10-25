@@ -10,6 +10,7 @@ import Cocoa
 
 class AUEventField: NSTextField {
     
+    private var heightConstraint: NSLayoutConstraint?
     var eventValue: AUEvent {
         didSet {
             self.stringValue = self.eventValue.description
@@ -34,15 +35,48 @@ class AUEventField: NSTextField {
         }
     }
     
-    init(origin: CGPoint, width: CGFloat, event: AUEvent) {
+    init(event: AUEvent) {
         self.eventValue = event
-        let font = NSFont.systemFontOfSize(18)
-//        event.description.sizeWithWidth(200, andFont: font)
+        super.init(frame: NSRect())
         
-        // TODO make below method
+        self.stringValue = self.eventValue.description // TODO dup code
+        self.font = NSFont.systemFontOfSize(18)
+        self.editable = false
+        self.bezeled = false
+        self.drawsBackground = false
+        self.selectable = false
+        self.textColor = event.color
+        self.cell?.wraps = true
+        self.cell?.lineBreakMode = .ByWordWrapping
+        self.postsFrameChangedNotifications = true
+        NSNotificationCenter.defaultCenter().addObserverForName(NSViewFrameDidChangeNotification, object: self, queue: NSOperationQueue.mainQueue()) { (notification: NSNotification) in
+            self.invalidateIntrinsicContentSize()
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        get {
+            let width = self.frame.width
+            let height = self.desiredHeight()
+            return CGSize(width: width, height: height)
+        }
+    }
+    
+    private func desiredHeight() -> CGFloat {
         // TODO below doesn't work for "Brunch with Rupii" (too tall)
-        let storage = NSTextStorage(string: event.description)
-        let container = NSTextContainer(containerSize: NSSize(width: width, height: CGFloat.max))
+        let font: NSFont
+        if let selfFont = self.font {
+            font = selfFont
+        } else {
+            font = NSFont.systemFontOfSize(18) // TODO dup code
+        }
+        
+        let storage = NSTextStorage(string: self.stringValue)
+        let container = NSTextContainer(containerSize: NSSize(width: self.frame.width, height: CGFloat.max))
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(container)
         storage.addLayoutManager(layoutManager)
@@ -50,20 +84,8 @@ class AUEventField: NSTextField {
         container.lineFragmentPadding = 3.0 // 3.0 to prevent text at same width from being cut off
         layoutManager.glyphRangeForTextContainer(container)
         let height = layoutManager.usedRectForTextContainer(container).size.height + font.pointSize / 3 // add font.pointSize / 3 for letters like 'y' and 'g'
-        
-        let frame = NSRect(origin: origin, size: CGSize(width: width, height: height))
-        super.init(frame: frame)
-        self.stringValue = self.eventValue.description // TODO dup code
-        self.font = font
-        self.editable = false
-        self.bezeled = false
-        self.drawsBackground = false
-        self.selectable = false
-        self.textColor = event.color
-    }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        return height
     }
 
     override func mouseDown(theEvent: NSEvent) { // or mouse up?

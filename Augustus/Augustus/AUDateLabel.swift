@@ -13,7 +13,7 @@ class AUDateLabel: NSView {
     
     var date: NSDate
     override var intrinsicContentSize: NSSize {
-        return CGSize(width: AUEventView.width, height: 50)
+        return CGSize(width: 0, height: 50)
     }
     
     convenience init(date: NSDate) {
