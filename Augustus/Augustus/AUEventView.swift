@@ -20,7 +20,7 @@ class AUEventView: NSView {
     private var eventViews: [AUEventField] = [] // TODO rename
     
     var events: [AUEvent] {
-        didSet { self.didSetEvents() }
+        didSet { self.didSetEvents(oldValue) }
     }
     
     
@@ -36,8 +36,8 @@ class AUEventView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func didSetEvents() {
-        let sortedEvents = self.events.sort() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
+    private func didSetEvents(oldValue: [AUEvent]) {
+         let eventSortLambda = {(lhs: AUEvent, rhs: AUEvent) -> Bool in
             var compareResult = NSComparisonResult.OrderedSame
             if let lhsCreationDate = lhs.creationDate, rhsCreationDate = rhs.creationDate {
                 compareResult = lhsCreationDate.compare(rhsCreationDate)
@@ -46,6 +46,11 @@ class AUEventView: NSView {
                 compareResult = lhs.description.compare(rhs.description)
             }
             return compareResult == .OrderedAscending
+        }
+        let sortedEvents = self.events.sort(eventSortLambda)
+        let oldEvents = oldValue.sort(eventSortLambda)
+        if sortedEvents == oldEvents {
+            return
         }
         
         for eventView in self.eventViews {
@@ -70,7 +75,7 @@ class AUEventView: NSView {
             self.addConstraint(bottomConstraint)
             self.bottomConstraint_ = bottomConstraint
         }
-        
+        self.needsDisplay = true
     }
     
     private func didSetAuDelegate() {

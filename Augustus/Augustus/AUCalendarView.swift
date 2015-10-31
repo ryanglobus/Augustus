@@ -188,7 +188,6 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
         
         for i in 0..<(AUWeek.numDaysInWeek) {
             self.eventViews[i].events = events[i]
-            self.eventViews[i].needsDisplay = true
         }
     }
     

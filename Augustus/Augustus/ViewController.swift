@@ -55,7 +55,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         self.view.addSubview(self.calendarView!)
         
         self.unselect()
-        self.refresh() // TODO needed?
+        self.refresh(newWeek: true) // TODO needed?
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification) in
             self.log.debug("refresh!")
             dispatch_async(dispatch_get_main_queue()) {
@@ -225,8 +225,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     
     private func refresh(newWeek newWeek: Bool = false) {
         self.drawMonthYearLabel()
-        self.calendarView?.week = self.week
-        self.calendarView?.eventsForWeek = [:]
+        if newWeek {
+            self.calendarView?.week = self.week
+            self.calendarView?.eventsForWeek = [:]
+        }
         let week = self.week
         self.numLoadEventTasks++
         self.progressIndicator?.startAnimation(self)
