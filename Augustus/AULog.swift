@@ -37,12 +37,10 @@ class AULog {
         if let lastSeparator = file.rangeOfString("/", options: .BackwardsSearch)?.startIndex.successor() {
             file = file.substringFromIndex(lastSeparator)
         }
-        let now = NSDate()
-        print("\(level) [\(now)] (\(file):\(line)) - ", terminator: "")
-        if let message: Any = message_ {
-            print(message)
-        } else { // TODO don't even print anything
-            print("")
+        if let message = message_ {
+            NSLog("\(level) (\(file):\(line)) - \(message)")
+        } else {
+            NSLog("\(level) (\(file):\(line)) - ")
         }
     }
 
