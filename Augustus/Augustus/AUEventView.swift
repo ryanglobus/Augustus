@@ -24,8 +24,6 @@ class AUEventView: NSView {
     }
     
     
-    
-    
     init(withRightBorder: Bool = true) {
         self.withRightBorder = withRightBorder
         self.events = []
@@ -37,7 +35,7 @@ class AUEventView: NSView {
     }
     
     private func didSetEvents(oldValue: [AUEvent]) {
-         let eventSortLambda = {(lhs: AUEvent, rhs: AUEvent) -> Bool in
+        let sortedEvents = self.events.sort() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
             var compareResult = NSComparisonResult.OrderedSame
             if let lhsCreationDate = lhs.creationDate, rhsCreationDate = rhs.creationDate {
                 compareResult = lhsCreationDate.compare(rhsCreationDate)
@@ -46,11 +44,6 @@ class AUEventView: NSView {
                 compareResult = lhs.description.compare(rhs.description)
             }
             return compareResult == .OrderedAscending
-        }
-        let sortedEvents = self.events.sort(eventSortLambda)
-        let oldEvents = oldValue.sort(eventSortLambda)
-        if sortedEvents == oldEvents {
-            return
         }
         
         for eventView in self.eventViews {

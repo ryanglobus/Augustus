@@ -32,31 +32,6 @@ protocol AUEvent {
     var color: NSColor {get set}
 }
 
-// TODO below is serious hack
-func ==(lhs: AUEvent, rhs: AUEvent) -> Bool {
-    return lhs.id == rhs.id &&
-        lhs.description == rhs.description &&
-        lhs.date == rhs.date &&
-        lhs.creationDate == rhs.creationDate &&
-        lhs.color == rhs.color
-}
-
-func !=(lhs: AUEvent, rhs: AUEvent) -> Bool {
-    return !(lhs == rhs)
-}
-
-func ==(lhs: [AUEvent], rhs: [AUEvent]) -> Bool {
-    if lhs.count != rhs.count {
-        return false
-    }
-    for i in 0..<(lhs.count) {
-        if lhs[i] != rhs[i] {
-            return false
-        }
-    }
-    return true
-}
-
 struct AUWeek { // TODO let user choose start on Sunday/Monday
     let firstDate: NSDate
     static let numDaysInWeek = 7
