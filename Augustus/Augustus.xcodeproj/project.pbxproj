@@ -18,6 +18,7 @@
 		3FA6F9D71B76728100FBDF9C /* AULog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6F9D61B76728100FBDF9C /* AULog.swift */; };
 		3FA6F9D81B76728100FBDF9C /* AULog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA6F9D61B76728100FBDF9C /* AULog.swift */; };
 		3FC287EB1BBB6FA4005A7F00 /* AUCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC287EA1BBB6FA4005A7F00 /* AUCalendarView.swift */; };
+		3FCE6B781BE57EA400D05C0C /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE6B771BE57EA400D05C0C /* WindowController.swift */; };
 		3FE17BCE1B38E92200EC2BFD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */; };
 		3FE17BD01B38E92200EC2BFD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE17BCF1B38E92200EC2BFD /* ViewController.swift */; };
 		3FE17BD21B38E92200EC2BFD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FE17BD11B38E92200EC2BFD /* Images.xcassets */; };
@@ -50,6 +51,7 @@
 		3FA6F9D31B75868300FBDF9C /* AUEventStoreInEK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUEventStoreInEK.swift; sourceTree = "<group>"; };
 		3FA6F9D61B76728100FBDF9C /* AULog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AULog.swift; sourceTree = "<group>"; };
 		3FC287EA1BBB6FA4005A7F00 /* AUCalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUCalendarView.swift; sourceTree = "<group>"; };
+		3FCE6B771BE57EA400D05C0C /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		3FE17BC81B38E92200EC2BFD /* Augustus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Augustus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FE17BCC1B38E92200EC2BFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				3FF9ED1D1B5C33B10019328E /* Views */,
 				3FE17BCD1B38E92200EC2BFD /* AppDelegate.swift */,
 				3FE17BCF1B38E92200EC2BFD /* ViewController.swift */,
+				3FCE6B771BE57EA400D05C0C /* WindowController.swift */,
 				3FE17BD11B38E92200EC2BFD /* Images.xcassets */,
 				3FE17BD31B38E92200EC2BFD /* Main.storyboard */,
 				3FE17BCB1B38E92200EC2BFD /* Supporting Files */,
@@ -263,6 +266,7 @@
 				3F8656211B97E9D500B61B1D /* AUEventInfo.swift in Sources */,
 				3FE17BD01B38E92200EC2BFD /* ViewController.swift in Sources */,
 				3F86561F1B97DE2500B61B1D /* AUCoreData.swift in Sources */,
+				3FCE6B781BE57EA400D05C0C /* WindowController.swift in Sources */,
 				3F75A2EA1B69254A004E878F /* AUEventView.swift in Sources */,
 				3FE17BEE1B38EA2200EC2BFD /* AUModel.swift in Sources */,
 				3FF9ED231B5C38710019328E /* AUDateLabel.swift in Sources */,
