@@ -17,6 +17,8 @@ DerivedData
 *.ipa
 *.xcuserstate
 releases/
+assets/
+Augustus/Augustus/Images.xcassets/*
 
 # CocoaPods
 #
