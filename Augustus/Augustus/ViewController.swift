@@ -48,14 +48,12 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
             self.scrollView = NSScrollView(frame: self.view.frame)
             self.scrollView?.hasVerticalScroller = true
             self.scrollView?.documentView = NSView(frame: self.scrollView!.frame)
-//            self.view.addSubview(scrollView!)
         }
         
         self.calendarView = AUCalendarView(frame: self.view.frame, week: AUWeek())
         self.calendarView?.auDelegate = self
         self.view.addSubview(self.calendarView!)
         
-//        self.addDateViews()
         self.unselect()
         self.refresh() // TODO needed?
         NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification) in
