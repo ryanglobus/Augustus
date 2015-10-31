@@ -16,7 +16,7 @@ func +(lhs: NSSize, rhs: NSSize) -> NSSize {
     return NSSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
-class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, AUEventViewDelegate {
+class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate {
     
     // TODO handle event modification failure
     
@@ -52,6 +52,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         }
         
         self.calendarView = AUCalendarView(frame: self.view.frame, week: AUWeek())
+        self.calendarView?.auDelegate = self
         self.view.addSubview(self.calendarView!)
         
 //        self.addDateViews()
@@ -120,15 +121,15 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
 
     
     // TODO unselect when add event
-    func select(eventField: AUEventField) {
+    func selectEventField(eventField: AUEventField) {
         self.selectedEventField?.selected = false
         eventField.selected = true
         self.selectedEventField = eventField
     }
     
-    func selectDateView(dateView: AUEventView) {
+    func selectEventView(eventView: AUEventView) {
         self.unselect()
-        self.popoverViewController?.close(dateView)
+        self.popoverViewController?.close(eventView)
 //        self.popoverViewController?.date = dateView.date // TODO make this do something
     }
     
@@ -137,8 +138,8 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
         self.selectedEventField = nil
     }
     
-    func requestEdit(eventField: AUEventField) { // TODO actually edit event
-        self.select(eventField)
+    func requestEditEventField(eventField: AUEventField) { // TODO actually edit event
+        self.selectEventField(eventField)
 
         let rect = NSRect(origin: CGPoint.zero, size: eventField.frame.size)
         self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSRectEdge.MaxX)
@@ -146,13 +147,18 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     }
     
     // TODO don't show datePicker
-    func requestNewEventForDateView(dateView: AUEventView) {
+    func requestNewEventForDateLabel(dateLabel: AUDateLabel) {
         // TODO unselect?
-//        let dateViewLabel = dateView.viewLabel
-//        let rect = NSRect(origin: CGPoint.zero, size: dateViewLabel.frame.size)
-//        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateViewLabel, preferredEdge: NSRectEdge.MaxY)
+        let rect = NSRect(origin: CGPoint.zero, size: dateLabel.frame.size)
+        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateLabel, preferredEdge: .MaxY)
         self.popoverViewController?.setModeToAdd()
-//        self.popoverViewController?.date = dateView.date
+        self.popoverViewController?.date = dateLabel.date
+    }
+    
+    func requestNewEventForEventView(eventView: AUEventView) {
+        if let dateLabel = self.calendarView?.dateLabelForEventView(eventView) {
+            self.requestNewEventForDateLabel(dateLabel)
+        }
     }
     
     @IBAction
@@ -191,7 +197,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUEventFieldDelegate, 
     @IBAction
     func edit(sender: AnyObject?) {
         if let eventField = self.selectedEventField {
-            self.requestEdit(eventField)
+            self.requestEditEventField(eventField)
         }
     }
     

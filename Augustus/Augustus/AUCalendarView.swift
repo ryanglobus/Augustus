@@ -10,10 +10,14 @@ import Cocoa
 
 class AUCalendarView: NSView {
     
-    private var eventViewCollection: AUEventViewCollection
+    private let eventViewCollection: AUEventViewCollection
     private var dateLabels: [AUDateLabel]
-    private var scrollView: NSScrollView
+    private let scrollView: NSScrollView
     private let log = AULog.instance
+    
+    var auDelegate: AUCalendarViewDelegate? {
+        didSet { self.didSetAuDelegate() }
+    }
     
     var week: AUWeek {
         didSet { self.didSetWeek(oldValue: oldValue) }
@@ -37,6 +41,24 @@ class AUCalendarView: NSView {
         self.setupScrollView(firstLabel: self.dateLabels[0])
     }
     
+    func dateLabelForEventView(eventView: AUEventView) -> AUDateLabel? {
+        let eventViews = self.eventViewCollection.eventViews
+        guard eventViews.count == AUWeek.numDaysInWeek && self.dateLabels.count == AUWeek.numDaysInWeek else {
+            self.log.error("There are only \(eventViews.count) event views and only \(self.dateLabels.count) date labels, when there should be \(AUWeek.numDaysInWeek) of each")
+            return nil
+        }
+        
+        
+        for i in 0..<(AUWeek.numDaysInWeek) {
+            let currEventView = eventViews[i]
+            if currEventView == eventView {
+                return self.dateLabels[i]
+            }
+        }
+        
+        return nil
+    }
+    
     private func didSetWeek(oldValue oldValue: AUWeek) {
         if oldValue != self.week {
             for i in 0..<self.dateLabels.count {
@@ -56,6 +78,13 @@ class AUCalendarView: NSView {
             }
         }
         self.eventViewCollection.events = events
+    }
+    
+    private func didSetAuDelegate() {
+        for dateLabel in self.dateLabels {
+            dateLabel.auDelegate = self.auDelegate
+        }
+        self.eventViewCollection.auDelegate = self.auDelegate
     }
     
     private func addDateLabels() {
@@ -126,6 +155,10 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
     private var eventViews: [AUEventView]
     private let log = AULog.instance
     
+    var auDelegate: AUEventViewCollectionDelegate? {
+        didSet { self.didSetAuDelegate() }
+    }
+    
     var events: [[AUEvent]] {
         didSet { self.didSetEvents() }
     }
@@ -139,6 +172,12 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func didSetAuDelegate() {
+        for eventView in self.eventViews {
+            eventView.auDelegate = self.auDelegate
+        }
     }
     
     private func didSetEvents() {
@@ -186,3 +225,9 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
         self.addConstraints([xConstraint, yConstraint, widthConstraint, minHeightConstraint])
     }
 }
+
+@objc protocol AUEventViewCollectionDelegate: AUEventViewDelegate {}
+
+@objc protocol AUCalendarViewDelegate: AUDateLabelDelegate, AUEventViewCollectionDelegate {}
+
+

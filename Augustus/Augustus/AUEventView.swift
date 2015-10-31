@@ -13,16 +13,11 @@ class AUEventView: NSView {
     
     private let log = AULog.instance
     let withRightBorder: Bool
-    var auDelegate: AUEventViewDelegate?
-    private var bottomConstraint_: NSLayoutConstraint?
-    private var eventViews: [AUEventField] = []
-    var eventFieldDelegate: AUEventFieldDelegate? {
-        didSet {
-            for eventView in self.eventViews {
-                eventView.auDelegate = self.eventFieldDelegate
-            }
-        }
+    var auDelegate: AUEventViewDelegate? {
+        didSet { self.didSetAuDelegate() }
     }
+    private var bottomConstraint_: NSLayoutConstraint?
+    private var eventViews: [AUEventField] = [] // TODO rename
     
     var events: [AUEvent] {
         didSet { self.didSetEvents() }
@@ -60,7 +55,7 @@ class AUEventView: NSView {
         var previousEventField_: AUEventField? = nil
         for event in sortedEvents {
             let eventField = AUEventField(event: event)
-            eventField.auDelegate = self.eventFieldDelegate
+            eventField.auDelegate = self.auDelegate
             self.eventViews.append(eventField)
             self.addSubview(eventField)
             self.addEventFieldConstraints(eventField, previousEventField_: previousEventField_)
@@ -76,6 +71,12 @@ class AUEventView: NSView {
             self.bottomConstraint_ = bottomConstraint
         }
         
+    }
+    
+    private func didSetAuDelegate() {
+        for eventField in self.eventViews {
+            eventField.auDelegate = self.auDelegate
+        }
     }
     
     private func addEventFieldConstraints(eventField: AUEventField, previousEventField_: AUEventField?) {
@@ -102,9 +103,9 @@ class AUEventView: NSView {
     
     override func mouseDown(theEvent: NSEvent) {
         if theEvent.clickCount == 2 {
-            self.auDelegate?.requestNewEventForDateView?(self)
+            self.auDelegate?.requestNewEventForEventView?(self)
         } else {
-            self.auDelegate?.selectDateView?(self)
+            self.auDelegate?.selectEventView?(self)
         }
     }
     
@@ -119,8 +120,8 @@ class AUEventView: NSView {
     
 }
 
-@objc protocol AUEventViewDelegate {
-    optional func selectDateView(dateView: AUEventView)
+@objc protocol AUEventViewDelegate: AUEventFieldDelegate {
+    optional func selectEventView(eventView: AUEventView)
     
-    optional func requestNewEventForDateView(dateView: AUEventView)
+    optional func requestNewEventForEventView(eventView: AUEventView)
 }

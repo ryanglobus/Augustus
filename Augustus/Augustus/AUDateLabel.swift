@@ -12,6 +12,7 @@ import AppKit
 class AUDateLabel: NSView {
     
     var date: NSDate
+    var auDelegate: AUDateLabelDelegate?
     override var intrinsicContentSize: NSSize {
         return CGSize(width: 0, height: 50)
     }
@@ -42,6 +43,14 @@ class AUDateLabel: NSView {
         NSGraphicsContext.currentContext()?.restoreGraphicsState()
     }
     
+    override func mouseDown(theEvent: NSEvent) {
+        if theEvent.clickCount == 2 {
+            self.auDelegate?.requestNewEventForDateLabel?(self)
+        } else {
+            self.auDelegate?.selectDateLabel?(self)
+        }
+    }
+    
     // TODO fonts and placement are not robust
     private func drawBorders() {
         let path = NSBezierPath()
@@ -69,4 +78,10 @@ class AUDateLabel: NSView {
         dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
     }
     
+}
+
+@objc protocol AUDateLabelDelegate {
+    optional func selectDateLabel(dateLabel: AUDateLabel)
+    
+    optional func requestNewEventForDateLabel(dateLabel: AUDateLabel)
 }
