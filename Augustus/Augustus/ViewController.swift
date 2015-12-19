@@ -27,6 +27,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     var selectedEventField: AUEventField?
     var addEventButton: NSButton?
     private var progressIndicator: NSProgressIndicator?
+    private var datePicker: NSDatePicker?
     private var scrollView: NSScrollView?
     private var calendarView: AUCalendarView?
     private var numLoadEventTasks = 0
@@ -84,6 +85,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
                 if let progressIndicator = view as? NSProgressIndicator {
                     self.progressIndicator = progressIndicator
                     self.progressIndicator?.hidden = true
+                }
+                if let datePicker = view as? NSDatePicker {
+                    datePicker.dateValue = NSDate() // now
+                    self.datePicker = datePicker
                 }
             }
         }
@@ -175,6 +180,14 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     func todaysWeek(sender: AnyObject?) {
         self.unselect()
         self.week = AUWeek()
+    }
+    
+    @IBAction
+    func goToDate(sender: AnyObject?) {
+        self.unselect()
+        if let datePicker = self.datePicker {
+            self.week = AUWeek(containingDate: datePicker.dateValue)
+        }
     }
     
     @IBAction
