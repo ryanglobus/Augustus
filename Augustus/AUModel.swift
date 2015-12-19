@@ -10,7 +10,7 @@ import Foundation
 import Cocoa
 
 struct AUModel {
-    static let calendar = NSCalendar.currentCalendar()
+    static let calendar = AUModel.getCurrentCalendar()
     static let oneHour: NSTimeInterval = 60 * 60
     static let oneDay: NSTimeInterval = 60 * 60 * 24
     static let notificationName = "AUModelNotification"
@@ -19,6 +19,12 @@ struct AUModel {
     static func beginningOfDate(date: NSDate) -> NSDate {
         let components = AUModel.calendar.components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day], fromDate: date)
         return AUModel.calendar.dateFromComponents(components)!
+    }
+    
+    private static func getCurrentCalendar() -> NSCalendar {
+        let calendar = NSCalendar.currentCalendar()
+        calendar.firstWeekday = 2 // Monday TODO make configurable
+        return calendar
     }
 }
 
