@@ -56,7 +56,7 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
     
     func dates() -> [NSDate] {
         var dates: [NSDate] = [firstDate]
-        var date = firstDate.dateByAddingTimeInterval(AUModel.oneDay)
+        var date = self.firstDate.dateByAddingTimeInterval(AUModel.oneDay)
         while AUModel.calendar.component(NSCalendarUnit.Weekday, fromDate: date) != AUModel.calendar.firstWeekday {
             dates.append(date)
             date = date.dateByAddingTimeInterval(AUModel.oneDay)
@@ -68,6 +68,15 @@ struct AUWeek { // TODO let user choose start on Sunday/Monday
         let numDays = Double(numWeeks * AUWeek.numDaysInWeek)
         let date = self.firstDate.dateByAddingTimeInterval(AUModel.oneDay * numDays)
         return AUWeek(containingDate: date)
+    }
+    
+    func plusNumMonths(numMonths: Int) -> AUWeek {
+        if let newDate = AUModel.calendar.dateByAddingUnit(NSCalendarUnit.Month, value: numMonths, toDate: self.firstDate, options: NSCalendarOptions()) {
+            return AUWeek(containingDate: newDate)
+        } else {
+            AULog.instance.error("Cannot add one month to \(self.firstDate). Returning self.")
+            return self
+        }
     }
     
     subscript(index: Int) -> NSDate {

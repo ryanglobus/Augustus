@@ -171,9 +171,21 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     }
     
     @IBAction
+    func previousMonth(sender: AnyObject?) {
+        self.unselect()
+        self.week = week.plusNumMonths(-1)
+    }
+    
+    @IBAction
     func nextWeek(sender: AnyObject?) {
         self.unselect()
         self.week = week.plusNumWeeks(1)
+    }
+    
+    @IBAction
+    func nextMonth(sender: AnyObject?) {
+        self.unselect()
+        self.week = week.plusNumMonths(1)
     }
     
     @IBAction

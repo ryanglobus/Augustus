@@ -332,8 +332,22 @@ CA
                                         <action selector="todaysWeek:" target="Oky-zY-oP4" id="cob-C8-h9P"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="E872A355-7777-4F96-8F7F-5D8AE0240267" label="" paletteLabel="" id="jHj-Za-LeA">
-                                    <nil key="toolTip"/>
+                                <toolbarItem implicitItemIdentifier="A3551D40-D1F8-4F17-91CA-73D65BBA8660" label="" paletteLabel="" toolTip="Previous Month" id="zLS-DW-p78">
+                                    <size key="minSize" width="25" height="25"/>
+                                    <size key="maxSize" width="31" height="25"/>
+                                    <button key="view" verticalHuggingPriority="750" id="ySh-j6-Pe0">
+                                        <rect key="frame" x="0.0" y="14" width="31" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" title="&lt;&lt;" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OmJ-V1-a8r">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <connections>
+                                        <action selector="previousMonth:" target="Oky-zY-oP4" id="mvE-Cl-SiB"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="E872A355-7777-4F96-8F7F-5D8AE0240267" label="" paletteLabel="" toolTip="Previous Week" id="jHj-Za-LeA">
                                     <size key="minSize" width="25" height="25"/>
                                     <size key="maxSize" width="25" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="aSP-em-bqf">
@@ -348,8 +362,7 @@ CA
                                         <action selector="previousWeek:" target="Oky-zY-oP4" id="BWi-36-H30"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="B54B030B-345E-450A-95F3-496B70BED921" label="" paletteLabel="" id="U2p-t0-GCn">
-                                    <nil key="toolTip"/>
+                                <toolbarItem implicitItemIdentifier="B54B030B-345E-450A-95F3-496B70BED921" label="" paletteLabel="" toolTip="Next Week" id="U2p-t0-GCn">
                                     <size key="minSize" width="25" height="25"/>
                                     <size key="maxSize" width="25" height="25"/>
                                     <button key="view" verticalHuggingPriority="750" id="6FA-oC-X8k">
@@ -362,6 +375,21 @@ CA
                                     </button>
                                     <connections>
                                         <action selector="nextWeek:" target="Oky-zY-oP4" id="f1F-w4-mh7"/>
+                                    </connections>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="557B0C0C-2D03-42FE-AB96-428E58B9AEA0" label="" paletteLabel="" toolTip="Next Month" id="H1c-qp-cbk">
+                                    <size key="minSize" width="25" height="25"/>
+                                    <size key="maxSize" width="31" height="25"/>
+                                    <button key="view" verticalHuggingPriority="750" id="YiP-rH-1Hj">
+                                        <rect key="frame" x="0.0" y="14" width="31" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" title="&gt;&gt;" bezelStyle="texturedRounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7kp-oN-EZU">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <connections>
+                                        <action selector="nextMonth:" target="Oky-zY-oP4" id="Hpc-JZ-8im"/>
                                     </connections>
                                 </toolbarItem>
                                 <toolbarItem implicitItemIdentifier="7E9D41C3-7507-4616-ADD7-155D61A42C21" label="" paletteLabel="" id="959-e7-6fh">
@@ -449,9 +477,11 @@ CA
                                 <toolbarItem reference="959-e7-6fh"/>
                                 <toolbarItem reference="8hu-Ar-VyK"/>
                                 <toolbarItem reference="YIn-qF-xg8"/>
+                                <toolbarItem reference="zLS-DW-p78"/>
                                 <toolbarItem reference="jHj-Za-LeA"/>
                                 <toolbarItem reference="NtJ-AL-rTc"/>
                                 <toolbarItem reference="U2p-t0-GCn"/>
+                                <toolbarItem reference="H1c-qp-cbk"/>
                             </defaultToolbarItems>
                         </toolbar>
                     </window>
