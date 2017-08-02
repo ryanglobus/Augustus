@@ -11,42 +11,43 @@ import Cocoa
 import CoreData
 
 struct AUCoreData {
+    // TODO 0.3 => 0.4, lose colors????
     static let instance = AUCoreData()
     
     let context: NSManagedObjectContext
-    private let log: AULog
+    fileprivate let log: AULog
     
-    private init?() {
+    fileprivate init?() {
         self.log = AULog.instance
-        guard let momdUrl = NSBundle.mainBundle().URLForResource("AUCoreDataModel", withExtension: "momd") else {
+        guard let momdUrl = Bundle.main.url(forResource: "AUCoreDataModel", withExtension: "momd") else {
             self.log.error("Could not create momdUrl")
             return nil
         }
         
-        let supportDirectories = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+        let supportDirectories = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
         guard supportDirectories.count > 0 else {
             self.log.error("No support directories found")
             return nil
         }
         // TODO sketchy
         let supportDirectory = supportDirectories[0]
-        let augustusDirectory = supportDirectory.URLByAppendingPathComponent("Augustus")
+        let augustusDirectory = supportDirectory.appendingPathComponent("Augustus")
         do {
-            try NSFileManager.defaultManager().createDirectoryAtURL(augustusDirectory, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(at: augustusDirectory, withIntermediateDirectories: true, attributes: nil)
         } catch let error as NSError {
             self.log.error(error.debugDescription)
             return nil
         }
-        let sqlUrl = supportDirectory.URLByAppendingPathComponent("Augustus/db.sqlite")
+        let sqlUrl = supportDirectory.appendingPathComponent("Augustus/db.sqlite")
         
-        guard let model = NSManagedObjectModel(contentsOfURL: momdUrl) else {
+        guard let model = NSManagedObjectModel(contentsOf: momdUrl) else {
             self.log.error("Could not create NSManagedObjectModel")
             return nil
         }
         
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         do {
-            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: sqlUrl, options: nil)
+            try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: sqlUrl, options: nil)
         } catch let error as NSError {
             // TODO
             self.log.error(error.debugDescription)
@@ -60,11 +61,11 @@ struct AUCoreData {
     }
     
     // TODO make this more ORM-y
-    func colorForAUEvent(event: AUEvent) -> NSColor? {
+    func colorForAUEvent(_ event: AUEvent) -> NSColor? {
         return self.getAUEventInfoForEvent(event)?.color
     }
     
-    func setColor(color: NSColor?, forEvent event: AUEvent) -> Bool {
+    func setColor(_ color: NSColor?, forEvent event: AUEvent) -> Bool {
         guard let eventInfo = self.getOrCreateAUEventInfoForEvent(event, commit: false) else {
             return false
         }
@@ -72,16 +73,16 @@ struct AUCoreData {
         return self.commit()
     }
     
-    private func getAUEventInfoForEvent(event: AUEvent) -> AUEventInfo? {
-        let entityDescription = NSEntityDescription.entityForName("AUEventInfo", inManagedObjectContext: self.context)
+    fileprivate func getAUEventInfoForEvent(_ event: AUEvent) -> AUEventInfo? {
+        let entityDescription = NSEntityDescription.entity(forEntityName: "AUEventInfo", in: self.context)
         let predicate = NSPredicate(format: "id = %@", event.id)
         
-        let request = NSFetchRequest()
+        let request = NSFetchRequest<NSFetchRequestResult>()
         request.entity = entityDescription
         request.predicate = predicate
         
         do {
-            let results = try context.executeFetchRequest(request)
+            let results = try context.fetch(request)
             guard results.count != 0 else {
                 self.log.info("No AUEventInfo found with id \(event.id)")
                 return nil
@@ -99,12 +100,12 @@ struct AUCoreData {
         }
     }
     
-    private func getOrCreateAUEventInfoForEvent(event: AUEvent, commit: Bool = true) -> AUEventInfo? { // TODO not thread safe
+    fileprivate func getOrCreateAUEventInfoForEvent(_ event: AUEvent, commit: Bool = true) -> AUEventInfo? { // TODO not thread safe
         if let eventInfo = self.getAUEventInfoForEvent(event) {
             return eventInfo
         }
         
-        guard let eventInfo = NSEntityDescription.insertNewObjectForEntityForName("AUEventInfo", inManagedObjectContext: self.context) as? AUEventInfo else {
+        guard let eventInfo = NSEntityDescription.insertNewObject(forEntityName: "AUEventInfo", into: self.context) as? AUEventInfo else {
             self.log.error("Could not create fresh event info object")
             return nil
         }
@@ -115,7 +116,7 @@ struct AUCoreData {
         return eventInfo
     }
     
-    private func commit() -> Bool {
+    fileprivate func commit() -> Bool {
         do {
             try self.context.save()
             return true

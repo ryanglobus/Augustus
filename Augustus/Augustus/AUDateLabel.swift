@@ -11,17 +11,17 @@ import AppKit
 
 class AUDateLabel: NSView {
     
-    var date: NSDate
+    var date: Date
     var auDelegate: AUDateLabelDelegate?
     override var intrinsicContentSize: NSSize {
         return CGSize(width: 0, height: 50)
     }
     
-    convenience init(date: NSDate) {
+    convenience init(date: Date) {
         self.init(date: date, frame: NSRect())
     }
     
-    init(date: NSDate, frame frameRect: NSRect) {
+    init(date: Date, frame frameRect: NSRect) {
         self.date = date
         super.init(frame: frameRect)
     }
@@ -30,20 +30,20 @@ class AUDateLabel: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
 
-        NSGraphicsContext.currentContext()?.saveGraphicsState()
+        NSGraphicsContext.current()?.saveGraphicsState()
         
         // Drawing code here.
         self.drawBorders()
         self.drawDayOfMonth()
         self.drawDayOfWeek()
         
-        NSGraphicsContext.currentContext()?.restoreGraphicsState()
+        NSGraphicsContext.current()?.restoreGraphicsState()
     }
     
-    override func mouseDown(theEvent: NSEvent) {
+    override func mouseDown(with theEvent: NSEvent) {
         if theEvent.clickCount == 2 {
             self.auDelegate?.requestNewEventForDateLabel?(self)
         } else {
@@ -52,36 +52,36 @@ class AUDateLabel: NSView {
     }
     
     // TODO fonts and placement are not robust
-    private func drawBorders() {
+    fileprivate func drawBorders() {
         let path = NSBezierPath()
         // border below
-        path.moveToPoint(NSPoint(x: 0, y: 0))
-        path.lineToPoint(NSPoint(x: self.frame.width, y: 0))
+        path.move(to: NSPoint(x: 0, y: 0))
+        path.line(to: NSPoint(x: self.frame.width, y: 0))
         path.lineWidth = 2
         path.stroke()
     }
     
-    private func drawDayOfMonth() {
-        let dayOfMonth = AUModel.calendar.component(NSCalendarUnit.Day, fromDate: self.date).description
-        let dayOfMonthAttributes = [NSFontAttributeName: NSFont.boldSystemFontOfSize(20)]
+    fileprivate func drawDayOfMonth() {
+        let dayOfMonth = (AUModel.calendar as NSCalendar).component(NSCalendar.Unit.day, from: self.date).description
+        let dayOfMonthAttributes = [NSFontAttributeName: NSFont.boldSystemFont(ofSize: 20)]
         let dayOfMonthLabel = NSAttributedString(string: dayOfMonth, attributes: dayOfMonthAttributes)
         let x = (self.frame.width - dayOfMonthLabel.size().width) / 2.0
-        dayOfMonthLabel.drawAtPoint(CGPoint(x: x, y: 0))
+        dayOfMonthLabel.draw(at: CGPoint(x: x, y: 0))
     }
     
-    private func drawDayOfWeek() {
-        let dayOfWeekNumber = AUModel.calendar.component(NSCalendarUnit.Weekday, fromDate: self.date)
+    fileprivate func drawDayOfWeek() {
+        let dayOfWeekNumber = (AUModel.calendar as NSCalendar).component(NSCalendar.Unit.weekday, from: self.date)
         let dayOfWeek = AUModel.calendar.weekdaySymbols[dayOfWeekNumber - 1]
-        let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFontOfSize(18)]
+        let dayOfWeekAttributes = [NSFontAttributeName: NSFont.systemFont(ofSize: 18)]
         let dayOfWeekLabel = NSAttributedString(string: dayOfWeek, attributes: dayOfWeekAttributes)
         let x = (self.frame.width - dayOfWeekLabel.size().width) / 2.0
-        dayOfWeekLabel.drawAtPoint(CGPoint(x: x, y: 25))
+        dayOfWeekLabel.draw(at: CGPoint(x: x, y: 25))
     }
     
 }
 
 @objc protocol AUDateLabelDelegate {
-    optional func selectDateLabel(dateLabel: AUDateLabel)
+    @objc optional func selectDateLabel(_ dateLabel: AUDateLabel)
     
-    optional func requestNewEventForDateLabel(dateLabel: AUDateLabel)
+    @objc optional func requestNewEventForDateLabel(_ dateLabel: AUDateLabel)
 }

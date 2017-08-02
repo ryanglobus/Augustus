@@ -11,13 +11,13 @@ import Cocoa
 class AUEventView: NSView {
     static let eventMargin: CGFloat = 5
     
-    private let log = AULog.instance
+    fileprivate let log = AULog.instance
     let withRightBorder: Bool
     var auDelegate: AUEventViewDelegate? {
         didSet { self.didSetAuDelegate() }
     }
-    private var bottomConstraint_: NSLayoutConstraint?
-    private var eventViews: [AUEventField] = [] // TODO rename
+    fileprivate var bottomConstraint_: NSLayoutConstraint?
+    fileprivate var eventViews: [AUEventField] = [] // TODO rename
     
     var events: [AUEvent] {
         didSet { self.didSetEvents(oldValue) }
@@ -34,16 +34,16 @@ class AUEventView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func didSetEvents(oldValue: [AUEvent]) {
-        let sortedEvents = self.events.sort() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
-            var compareResult = NSComparisonResult.OrderedSame
-            if let lhsCreationDate = lhs.creationDate, rhsCreationDate = rhs.creationDate {
-                compareResult = lhsCreationDate.compare(rhsCreationDate)
+    fileprivate func didSetEvents(_ oldValue: [AUEvent]) {
+        let sortedEvents = self.events.sorted() {(lhs: AUEvent, rhs: AUEvent) -> Bool in
+            var compareResult = ComparisonResult.orderedSame
+            if let lhsCreationDate = lhs.creationDate, let rhsCreationDate = rhs.creationDate {
+                compareResult = lhsCreationDate.compare(rhsCreationDate as Date)
             }
-            if compareResult == .OrderedSame {
+            if compareResult == .orderedSame {
                 compareResult = lhs.description.compare(rhs.description)
             }
-            return compareResult == .OrderedAscending
+            return compareResult == .orderedAscending
         }
         
         for eventView in self.eventViews {
@@ -64,42 +64,42 @@ class AUEventView: NSView {
             self.removeConstraint(bottomConstraint)
         }
         if let lastEventField = previousEventField_ {
-            let bottomConstraint = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .GreaterThanOrEqual, toItem: lastEventField, attribute: .Bottom, multiplier: 1, constant: 0)
+            let bottomConstraint = NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .greaterThanOrEqual, toItem: lastEventField, attribute: .bottom, multiplier: 1, constant: 0)
             self.addConstraint(bottomConstraint)
             self.bottomConstraint_ = bottomConstraint
         }
         self.needsDisplay = true
     }
     
-    private func didSetAuDelegate() {
+    fileprivate func didSetAuDelegate() {
         for eventField in self.eventViews {
             eventField.auDelegate = self.auDelegate
         }
     }
     
-    private func addEventFieldConstraints(eventField: AUEventField, previousEventField_: AUEventField?) {
+    fileprivate func addEventFieldConstraints(_ eventField: AUEventField, previousEventField_: AUEventField?) {
         let topConstraint: NSLayoutConstraint
         if let previousEventField = previousEventField_ {
-            topConstraint = NSLayoutConstraint(item: eventField, attribute: .Top, relatedBy: .Equal, toItem: previousEventField, attribute: .Bottom, multiplier: 1, constant: 20)
+            topConstraint = NSLayoutConstraint(item: eventField, attribute: .top, relatedBy: .equal, toItem: previousEventField, attribute: .bottom, multiplier: 1, constant: 20)
         } else {
-            topConstraint = NSLayoutConstraint(item: eventField, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
+            topConstraint = NSLayoutConstraint(item: eventField, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
         }
         
-        let leftConstraint = NSLayoutConstraint(item: eventField, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
-        let rightConstraint = NSLayoutConstraint(item: eventField, attribute: .Right, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1, constant: 0)
+        let leftConstraint = NSLayoutConstraint(item: eventField, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
+        let rightConstraint = NSLayoutConstraint(item: eventField, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
         
         eventField.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([leftConstraint, rightConstraint, topConstraint])
     }
 
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
         if self.withRightBorder {
             self.drawBorders()
         }
     }
     
-    override func mouseDown(theEvent: NSEvent) {
+    override func mouseDown(with theEvent: NSEvent) {
         if theEvent.clickCount == 2 {
             self.auDelegate?.requestNewEventForEventView?(self)
         } else {
@@ -107,11 +107,11 @@ class AUEventView: NSView {
         }
     }
     
-    private func drawBorders() {
+    fileprivate func drawBorders() {
         let path = NSBezierPath()
         // border to the right
-        path.moveToPoint(NSPoint(x: self.frame.width, y: 0))
-        path.lineToPoint(NSPoint(x: self.frame.width, y: self.frame.height))
+        path.move(to: NSPoint(x: self.frame.width, y: 0))
+        path.line(to: NSPoint(x: self.frame.width, y: self.frame.height))
         path.lineWidth = 2
         path.stroke()
     }
@@ -119,7 +119,7 @@ class AUEventView: NSView {
 }
 
 @objc protocol AUEventViewDelegate: AUEventFieldDelegate {
-    optional func selectEventView(eventView: AUEventView)
+    @objc optional func selectEventView(_ eventView: AUEventView)
     
-    optional func requestNewEventForEventView(eventView: AUEventView)
+    @objc optional func requestNewEventForEventView(_ eventView: AUEventView)
 }

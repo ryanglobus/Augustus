@@ -20,17 +20,17 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     
     // TODO handle event modification failure
     
-    private let log = AULog.instance
+    fileprivate let log = AULog.instance
 //    var dateViews: [AUEventView] = []
     var monthYearLabel: NSTextField?
     var popoverViewController: PopoverViewController?
     var selectedEventField: AUEventField?
     var addEventButton: NSButton?
-    private var progressIndicator: NSProgressIndicator?
-    private var datePicker: NSDatePicker?
-    private var scrollView: NSScrollView?
-    private var calendarView: AUCalendarView?
-    private var numLoadEventTasks = 0
+    fileprivate var progressIndicator: NSProgressIndicator?
+    fileprivate var datePicker: NSDatePicker?
+    fileprivate var scrollView: NSScrollView?
+    fileprivate var calendarView: AUCalendarView?
+    fileprivate var numLoadEventTasks = 0
     var week: AUWeek = AUWeek() {
         didSet {
             self.refresh(newWeek: true)
@@ -42,7 +42,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let window = NSApplication.sharedApplication().windows[0] // TODO bold assumption
+        let window = NSApplication.shared().windows[0] // TODO bold assumption
         window.delegate = self
         
         if (self.scrollView == nil) {
@@ -57,9 +57,9 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         
         self.unselect()
         self.refresh(newWeek: true) // TODO needed?
-        NSNotificationCenter.defaultCenter().addObserverForName(AUModel.notificationName, object: nil, queue: nil) { (notification: NSNotification) in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: AUModel.notificationName), object: nil, queue: nil) { (notification: Notification) in
             self.log.debug("refresh!")
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.refresh()
             }
         }
@@ -84,10 +84,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
                 }
                 if let progressIndicator = view as? NSProgressIndicator {
                     self.progressIndicator = progressIndicator
-                    self.progressIndicator?.hidden = true
+                    self.progressIndicator?.isHidden = true
                 }
                 if let datePicker = view as? NSDatePicker {
-                    datePicker.dateValue = NSDate() // now
+                    datePicker.dateValue = Date() // now
                     self.datePicker = datePicker
                 }
             }
@@ -98,7 +98,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         let viewFrame = self.view.frame
         var windowFrame_ = self.view.window?.frame
         windowFrame_?.size.height -= 32 // the height of the title we're about to remove
-        self.view.window?.titleVisibility = .Hidden
+        self.view.window?.titleVisibility = .hidden
         if let windowFrame = windowFrame_ {
             self.view.window?.setFrame(windowFrame, display: true, animate: true)
         }
@@ -107,16 +107,17 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         self.popoverViewController = PopoverViewController.newInstance()
     }
 
-    override var representedObject: AnyObject? {
+    override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
         }
     }
     
-    func windowWillResize(sender: NSWindow, toSize frameSize: NSSize) -> NSSize {
-        let sizeDiff = frameSize - sender.frame.size
+    func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
         if let calendarView = self.calendarView {
-            calendarView.setFrameSize(calendarView.frame.size + sizeDiff)
+            let heightDiff = frameSize.height - sender.frame.height
+            let newCalendarViewSize = NSSize(width: sender.frame.width, height: calendarView.frame.height + heightDiff)
+            calendarView.setFrameSize(newCalendarViewSize)
         }
         return frameSize
     }
@@ -124,13 +125,13 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
 
     
     // TODO unselect when add event
-    func selectEventField(eventField: AUEventField) {
+    func selectEventField(_ eventField: AUEventField) {
         self.selectedEventField?.selected = false
         eventField.selected = true
         self.selectedEventField = eventField
     }
     
-    func selectEventView(eventView: AUEventView) {
+    func selectEventView(_ eventView: AUEventView) {
         self.unselect()
         self.popoverViewController?.close(eventView)
 //        self.popoverViewController?.date = dateView.date // TODO make this do something
@@ -141,61 +142,61 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         self.selectedEventField = nil
     }
     
-    func requestEditEventField(eventField: AUEventField) { // TODO actually edit event
+    func requestEditEventField(_ eventField: AUEventField) { // TODO actually edit event
         self.selectEventField(eventField)
 
         let rect = NSRect(origin: CGPoint.zero, size: eventField.frame.size)
-        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: eventField, preferredEdge: NSRectEdge.MaxX)
+        self.popoverViewController?.popover?.show(relativeTo: rect, of: eventField, preferredEdge: NSRectEdge.maxX)
         self.popoverViewController?.setModeToEdit(eventField.eventValue)
     }
     
     // TODO don't show datePicker
-    func requestNewEventForDateLabel(dateLabel: AUDateLabel) {
+    func requestNewEventForDateLabel(_ dateLabel: AUDateLabel) {
         // TODO unselect?
         let rect = NSRect(origin: CGPoint.zero, size: dateLabel.frame.size)
-        self.popoverViewController?.popover?.showRelativeToRect(rect, ofView: dateLabel, preferredEdge: .MaxY)
+        self.popoverViewController?.popover?.show(relativeTo: rect, of: dateLabel, preferredEdge: .maxY)
         self.popoverViewController?.setModeToAdd()
         self.popoverViewController?.date = dateLabel.date
     }
     
-    func requestNewEventForEventView(eventView: AUEventView) {
+    func requestNewEventForEventView(_ eventView: AUEventView) {
         if let dateLabel = self.calendarView?.dateLabelForEventView(eventView) {
             self.requestNewEventForDateLabel(dateLabel)
         }
     }
     
     @IBAction
-    func previousWeek(sender: AnyObject?) {
+    func previousWeek(_ sender: AnyObject?) {
         self.unselect()
         self.week = week.plusNumWeeks(-1)
     }
     
     @IBAction
-    func previousMonth(sender: AnyObject?) {
+    func previousMonth(_ sender: AnyObject?) {
         self.unselect()
         self.week = week.plusNumMonths(-1)
     }
     
     @IBAction
-    func nextWeek(sender: AnyObject?) {
+    func nextWeek(_ sender: AnyObject?) {
         self.unselect()
         self.week = week.plusNumWeeks(1)
     }
     
     @IBAction
-    func nextMonth(sender: AnyObject?) {
+    func nextMonth(_ sender: AnyObject?) {
         self.unselect()
         self.week = week.plusNumMonths(1)
     }
     
     @IBAction
-    func todaysWeek(sender: AnyObject?) {
+    func todaysWeek(_ sender: AnyObject?) {
         self.unselect()
         self.week = AUWeek()
     }
     
     @IBAction
-    func goToDate(sender: AnyObject?) {
+    func goToDate(_ sender: AnyObject?) {
         self.unselect()
         if let datePicker = self.datePicker {
             self.week = AUWeek(containingDate: datePicker.dateValue)
@@ -203,10 +204,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     }
     
     @IBAction
-    func requestNewEvent(sender: AnyObject?) {
+    func requestNewEvent(_ sender: AnyObject?) {
         if let view = self.addEventButton {
             // must show first for NSDatePicker to be created for setDate:
-            self.popoverViewController?.popover?.showRelativeToRect(view.frame, ofView: view, preferredEdge: NSRectEdge.MaxY)
+            self.popoverViewController?.popover?.show(relativeTo: view.frame, of: view, preferredEdge: NSRectEdge.maxY)
             self.popoverViewController?.setModeToAdd()
             self.popoverViewController?.date = self.week.firstDate
         }
@@ -218,20 +219,20 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     // MENU ACTIONS
     
     @IBAction
-    func edit(sender: AnyObject?) {
+    func edit(_ sender: AnyObject?) {
         if let eventField = self.selectedEventField {
             self.requestEditEventField(eventField)
         }
     }
     
-    func delete(sender: AnyObject?) {
+    func delete(_ sender: AnyObject?) {
         if let event = self.selectedEventField?.eventValue {
             AUModel.eventStore.removeEvent(event)
             self.unselect()
         }
     }
     
-    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         switch menuItem.title {
         case "New Event...":
             return true
@@ -242,29 +243,29 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         }
     }
     
-    private func drawMonthYearLabel() {
-        let df = NSDateFormatter()
+    fileprivate func drawMonthYearLabel() {
+        let df = DateFormatter()
         df.dateFormat = "MMMM yyyy"
-        self.monthYearLabel?.stringValue = df.stringFromDate(week.firstDate)
+        self.monthYearLabel?.stringValue = df.string(from: week.firstDate as Date)
     }
     
-    private func refresh(newWeek newWeek: Bool = false) {
+    fileprivate func refresh(newWeek: Bool = false) {
         self.drawMonthYearLabel()
         if newWeek {
             self.calendarView?.week = self.week
             self.calendarView?.eventsForWeek = [:]
         }
         let week = self.week
-        self.numLoadEventTasks++
+        self.numLoadEventTasks += 1
         self.progressIndicator?.startAnimation(self)
-        self.progressIndicator?.hidden = false
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+        self.progressIndicator?.isHidden = false
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
             let weekEvents = AUModel.eventStore.eventsForWeek(week)
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.calendarView?.eventsForWeek = weekEvents
-                self.numLoadEventTasks--
+                self.numLoadEventTasks -= 1
                 if self.numLoadEventTasks == 0 {
-                    self.progressIndicator?.hidden = true
+                    self.progressIndicator?.isHidden = true
                     self.progressIndicator?.stopAnimation(self)
                 }
             }

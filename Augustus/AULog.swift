@@ -10,33 +10,32 @@ import Foundation
 
 class AULog {
     enum Level: Int, CustomStringConvertible {
-        case Debug = 1, Info, Warn, Error
+        case debug = 1, info, warn, error
         
         var description: String {
             switch self {
-                case .Debug: return "DEBUG"
-                case .Info: return "INFO"
-                case .Warn: return "WARN"
-                case .Error: return "ERROR"
+                case .debug: return "DEBUG"
+                case .info: return "INFO"
+                case .warn: return "WARN"
+                case .error: return "ERROR"
             }
         }
     }
     
-    static let instance = AULog(minLevel: .Debug)
+    static let instance = AULog(minLevel: .debug)
     let minLevel: Level
     
     init(minLevel: Level) {
         self.minLevel = minLevel
     }
 
-    func log(message_: Any?, level: Level, var file: String = __FILE__, line: Int = __LINE__) {
+    func log(_ message_: Any?, level: Level, file: String = #file, line: Int = #line) {
+        var file = file
         guard level.rawValue >= self.minLevel.rawValue else {
             return
         }
 
-        if let lastSeparator = file.rangeOfString("/", options: .BackwardsSearch)?.startIndex.successor() {
-            file = file.substringFromIndex(lastSeparator)
-        }
+        file = (file as NSString).lastPathComponent
         if let message = message_ {
             NSLog("\(level) (\(file):\(line)) - \(message)")
         } else {
@@ -44,21 +43,21 @@ class AULog {
         }
     }
 
-    func debug(message_: Any?, file: String = __FILE__, line: Int = __LINE__) {
-        log(message_, level: .Debug, file: file, line: line)
+    func debug(_ message_: Any?, file: String = #file, line: Int = #line) {
+        log(message_, level: .debug, file: file, line: line)
     }
 
-    func info(message_: Any?, file: String = __FILE__, line: Int = __LINE__) {
-        log(message_, level: .Info, file: file, line: line)
+    func info(_ message_: Any?, file: String = #file, line: Int = #line) {
+        log(message_, level: .info, file: file, line: line)
         
     }
 
-    func warn(message_: Any?, file: String = __FILE__, line: Int = __LINE__) {
-        log(message_, level: .Warn, file: file, line: line)
+    func warn(_ message_: Any?, file: String = #file, line: Int = #line) {
+        log(message_, level: .warn, file: file, line: line)
     }
 
-    func error(message_: Any?, file: String = __FILE__, line: Int = __LINE__) {
-        log(message_, level: .Error, file: file, line: line)
+    func error(_ message_: Any?, file: String = #file, line: Int = #line) {
+        log(message_, level: .error, file: file, line: line)
     }
 
 }

@@ -10,10 +10,10 @@ import Cocoa
 
 class AUCalendarView: NSView {
     
-    private let eventViewCollection: AUEventViewCollection
-    private var dateLabels: [AUDateLabel]
-    private let scrollView: NSScrollView
-    private let log = AULog.instance
+    fileprivate let eventViewCollection: AUEventViewCollection
+    fileprivate var dateLabels: [AUDateLabel]
+    fileprivate let scrollView: NSScrollView
+    fileprivate let log = AULog.instance
     
     var auDelegate: AUCalendarViewDelegate? {
         didSet { self.didSetAuDelegate() }
@@ -25,7 +25,7 @@ class AUCalendarView: NSView {
     
     // TODO below is wonky
     /// denormalized from week property; set week first
-    var eventsForWeek: [NSDate: [AUEvent]] {
+    var eventsForWeek: [Date: [AUEvent]] {
         didSet { self.didSetEventsForWeek() }
     }
     
@@ -41,7 +41,7 @@ class AUCalendarView: NSView {
         self.setupScrollView(firstLabel: self.dateLabels[0])
     }
     
-    func dateLabelForEventView(eventView: AUEventView) -> AUDateLabel? {
+    func dateLabelForEventView(_ eventView: AUEventView) -> AUDateLabel? {
         let eventViews = self.eventViewCollection.eventViews
         guard eventViews.count == AUWeek.numDaysInWeek && self.dateLabels.count == AUWeek.numDaysInWeek else {
             self.log.error("There are only \(eventViews.count) event views and only \(self.dateLabels.count) date labels, when there should be \(AUWeek.numDaysInWeek) of each")
@@ -59,7 +59,7 @@ class AUCalendarView: NSView {
         return nil
     }
     
-    private func didSetWeek(oldValue oldValue: AUWeek) {
+    fileprivate func didSetWeek(oldValue: AUWeek) {
         if oldValue != self.week {
             for i in 0..<self.dateLabels.count {
                 self.dateLabels[i].date = self.week[i]
@@ -68,10 +68,10 @@ class AUCalendarView: NSView {
         }
     }
     
-    private func didSetEventsForWeek() {
+    fileprivate func didSetEventsForWeek() {
         var events: [[AUEvent]] = []
         for date in self.week.dates() {
-            if let dateEvents = self.eventsForWeek[date] {
+            if let dateEvents = self.eventsForWeek[date as Date] {
                 events.append(dateEvents)
             } else {
                 events.append([])
@@ -80,14 +80,14 @@ class AUCalendarView: NSView {
         self.eventViewCollection.events = events
     }
     
-    private func didSetAuDelegate() {
+    fileprivate func didSetAuDelegate() {
         for dateLabel in self.dateLabels {
             dateLabel.auDelegate = self.auDelegate
         }
         self.eventViewCollection.auDelegate = self.auDelegate
     }
     
-    private func addDateLabels() {
+    fileprivate func addDateLabels() {
         var previousLabel_: AUDateLabel? = nil
         for date in self.week.dates() {
             let label = AUDateLabel(date: date)
@@ -98,17 +98,17 @@ class AUCalendarView: NSView {
             label.translatesAutoresizingMaskIntoConstraints = false
             let xConstraint: NSLayoutConstraint
             if let previousLabel = previousLabel_ {
-                xConstraint = NSLayoutConstraint(item: label, attribute: .Left, relatedBy: .Equal, toItem: previousLabel, attribute: .Right, multiplier: 1, constant: 0)
+                xConstraint = NSLayoutConstraint(item: label, attribute: .left, relatedBy: .equal, toItem: previousLabel, attribute: .right, multiplier: 1, constant: 0)
             } else {
-                xConstraint = NSLayoutConstraint(item: label, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
+                xConstraint = NSLayoutConstraint(item: label, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
             }
             let constraints = [
                 // x
                 xConstraint,
                 // y
-                NSLayoutConstraint(item: label, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0),
+                NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0),
                 // width
-                NSLayoutConstraint(item: label, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: CGFloat(1.0) / CGFloat(AUWeek.numDaysInWeek), constant: 0),
+                NSLayoutConstraint(item: label, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: CGFloat(1.0) / CGFloat(AUWeek.numDaysInWeek), constant: 0),
                 // height uses intrinsic size
             ]
             self.addConstraints(constraints)
@@ -117,7 +117,7 @@ class AUCalendarView: NSView {
         }
     }
     
-    private func setupScrollView(firstLabel label: AUDateLabel) { // TODO kinda dumb, but forces date labels to be initialized first
+    fileprivate func setupScrollView(firstLabel label: AUDateLabel) { // TODO kinda dumb, but forces date labels to be initialized first
         self.scrollView.documentView = self.eventViewCollection
         self.scrollView.hasVerticalScroller = true
         self.addSubview(self.scrollView)
@@ -125,21 +125,21 @@ class AUCalendarView: NSView {
         self.addEventViewCollectionConstraints()
     }
     
-    private func addScrollViewConstraints(firstLabel label: AUDateLabel) {
-        let leftConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
-        let topConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Top, relatedBy: .Equal, toItem: label, attribute: .Bottom, multiplier: 1, constant: 0)
-        let bottomConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
+    fileprivate func addScrollViewConstraints(firstLabel label: AUDateLabel) {
+        let leftConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .top, relatedBy: .equal, toItem: label, attribute: .bottom, multiplier: 1, constant: 0)
+        let bottomConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: self.scrollView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0)
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([leftConstraint, topConstraint, bottomConstraint, widthConstraint])
     }
     
-    private func addEventViewCollectionConstraints() {
-        let leftConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
-        let topConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
+    fileprivate func addEventViewCollectionConstraints() {
+        let leftConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
+        let topConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
         // TODO below is too wide
-        let widthConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
-        let heightConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: self.scrollView, attribute: .Height, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0)
+        let heightConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: self.scrollView, attribute: .height, multiplier: 1, constant: 0)
         eventViewCollection.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([leftConstraint, topConstraint, widthConstraint, heightConstraint])
         
@@ -152,8 +152,8 @@ class AUCalendarView: NSView {
 }
 
 private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift?
-    private var eventViews: [AUEventView]
-    private let log = AULog.instance
+    fileprivate var eventViews: [AUEventView]
+    fileprivate let log = AULog.instance
     
     var auDelegate: AUEventViewCollectionDelegate? {
         didSet { self.didSetAuDelegate() }
@@ -174,13 +174,13 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func didSetAuDelegate() {
+    fileprivate func didSetAuDelegate() {
         for eventView in self.eventViews {
             eventView.auDelegate = self.auDelegate
         }
     }
     
-    private func didSetEvents() {
+    fileprivate func didSetEvents() {
         guard self.eventViews.count == AUWeek.numDaysInWeek && self.events.count == AUWeek.numDaysInWeek else {
             self.log.error("There are only \(self.eventViews.count) event views and only \(self.events.count) event arrays, when there should be \(AUWeek.numDaysInWeek) of each")
             return
@@ -191,7 +191,7 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
         }
     }
     
-    private func addEventViews() {
+    fileprivate func addEventViews() {
         var constraints: [NSLayoutConstraint] = []
         var previousEventView_: AUEventView? = nil
         for i in 1...AUWeek.numDaysInWeek {
@@ -200,7 +200,7 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
             eventView.translatesAutoresizingMaskIntoConstraints = false
             addConstraintsToEventView(eventView, withPreviousEventView_: previousEventView_)
             
-            let heightConstraint = NSLayoutConstraint(item: self, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: eventView, attribute: .Height, multiplier: 1, constant: 0)
+            let heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: eventView, attribute: .height, multiplier: 1, constant: 0)
             heightConstraint.priority = NSLayoutPriorityRequired
             constraints.append(heightConstraint)
             
@@ -210,16 +210,16 @@ private class AUEventViewCollection : NSView { // TODO move to AUEventView.swift
         self.addConstraints(constraints)
     }
     
-    private func addConstraintsToEventView(eventView: AUEventView, withPreviousEventView_: AUEventView?) {
+    fileprivate func addConstraintsToEventView(_ eventView: AUEventView, withPreviousEventView_: AUEventView?) {
         let xConstraint: NSLayoutConstraint
         if let previousEventView = withPreviousEventView_ {
-            xConstraint = NSLayoutConstraint(item: eventView, attribute: .Left, relatedBy: .Equal, toItem: previousEventView, attribute: .Right, multiplier: 1, constant: 0)
+            xConstraint = NSLayoutConstraint(item: eventView, attribute: .left, relatedBy: .equal, toItem: previousEventView, attribute: .right, multiplier: 1, constant: 0)
         } else {
-            xConstraint = NSLayoutConstraint(item: eventView, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1, constant: 0)
+            xConstraint = NSLayoutConstraint(item: eventView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
         }
-        let yConstraint = NSLayoutConstraint(item: eventView, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: eventView, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: CGFloat(1.0) / CGFloat(AUWeek.numDaysInWeek), constant: 0)
-        let minHeightConstraint = NSLayoutConstraint(item: eventView, attribute: .Height, relatedBy: .GreaterThanOrEqual, toItem: self, attribute: .Height, multiplier: 1, constant: 0)
+        let yConstraint = NSLayoutConstraint(item: eventView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: eventView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: CGFloat(1.0) / CGFloat(AUWeek.numDaysInWeek), constant: 0)
+        let minHeightConstraint = NSLayoutConstraint(item: eventView, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .height, multiplier: 1, constant: 0)
         
         self.addConstraints([xConstraint, yConstraint, widthConstraint, minHeightConstraint])
     }

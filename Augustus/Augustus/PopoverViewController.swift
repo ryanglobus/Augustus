@@ -11,10 +11,10 @@ import Cocoa
 class PopoverViewController: NSViewController, NSTextFieldDelegate {
     
     enum Mode {
-        case AddMode, EditMode
+        case addMode, editMode
     }
     
-    var date: NSDate? {
+    var date: Date? {
         get {
             return self.datePicker?.dateValue
         } set {
@@ -34,13 +34,13 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
-    private(set) var event: AUEvent?
+    fileprivate(set) var event: AUEvent?
     var mode: Mode {
         get {
             if event == nil {
-                return .AddMode
+                return .addMode
             } else {
-                return .EditMode
+                return .editMode
             }
         }
     }
@@ -52,7 +52,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
     @IBOutlet weak var colorPicker: NSColorWell?
 
     static func newInstance() -> PopoverViewController? { // TODO hack
-        let pvc = PopoverViewController(nibName: "PopoverViewController", bundle: NSBundle(identifier: "Augustus"))
+        let pvc = PopoverViewController(nibName: "PopoverViewController", bundle: Bundle(identifier: "Augustus"))
         pvc?.popover = NSPopover()
         pvc?.popover?.contentViewController = pvc
         return pvc
@@ -70,17 +70,17 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
-    @IBAction func addEvent(sender: AnyObject) { // TODO rename
+    @IBAction func addEvent(_ sender: AnyObject) { // TODO rename
         if let description = eventDescriptionField?.stringValue {
             if !description.isEmpty { // TODO strip whitespace too
                 if let date = datePicker?.dateValue {
                     switch self.mode {
-                    case .AddMode:
+                    case .addMode:
                         var event = AUModel.eventStore.addEventOnDate(date, description: description)
                         if let color = self.color {
                             event?.color = color
                         }
-                    case .EditMode:
+                    case .editMode:
                         if var event = self.event {
                             AUModel.eventStore.editEvent(event, newDate: date, newDescription: description)
                             if let color = self.color {
@@ -94,9 +94,9 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         self.close(sender)
     }
     
-    @IBAction func close(sender: AnyObject) {
+    @IBAction func close(_ sender: AnyObject) {
         self.popover?.performClose(self) // TODO close color palette as well
-        NSColorPanel.sharedColorPanel().close()
+        NSColorPanel.shared().close()
     }
     
     func setModeToAdd() {
@@ -105,9 +105,9 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         self.addEventButton?.title = "Add Event" // TODO dup String from IB
     }
     
-    func setModeToEdit(event: AUEvent) {
+    func setModeToEdit(_ event: AUEvent) {
         self.event = event
-        self.date = event.date
+        self.date = event.date as Date
         self.eventDescriptionField?.stringValue = event.description
         self.color = event.color
         self.addEventButton?.title = "Edit Event"
