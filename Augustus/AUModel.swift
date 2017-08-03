@@ -41,6 +41,11 @@ protocol AUEvent {
 struct AUWeek { // TODO let user choose start on Sunday/Monday
     let firstDate: Date
     static let numDaysInWeek = 7
+    var lastDate: Date {
+        get {
+            return self[AUWeek.numDaysInWeek - 1]
+        }
+    }
     
     init() {
         self.init(containingDate: Date())

@@ -248,10 +248,27 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         }
     }
     
-    fileprivate func drawMonthYearLabel() {
-        let df = DateFormatter()
-        df.dateFormat = "MMMM yyyy"
-        self.monthYearLabel?.stringValue = df.string(from: week.firstDate as Date)
+    private func drawMonthYearLabel() {
+        let monthDF = DateFormatter()
+        monthDF.dateFormat = "MMMM"
+        let yearDF = DateFormatter()
+        yearDF.dateFormat = "yyyy"
+        let firstMonth = monthDF.string(from: week.firstDate)
+        let lastMonth = monthDF.string(from: week.lastDate)
+        let firstYear = yearDF.string(from: week.firstDate)
+        let lastYear = yearDF.string(from: week.lastDate)
+        let monthYearString: String
+        if firstYear == lastYear {
+            if firstMonth == lastMonth {
+                monthYearString = "\(firstMonth) \(firstYear)"
+            } else {
+                monthYearString = "\(firstMonth)/\(lastMonth) \(firstYear)"
+            }
+        } else {
+            // must be December YYYY/January (YYYY+1)
+            monthYearString = "\(firstMonth) \(firstYear)/\(lastMonth) \(lastYear)"
+        }
+        self.monthYearLabel?.stringValue = monthYearString
     }
     
     fileprivate func refresh(newWeek: Bool = false) {

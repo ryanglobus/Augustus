@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -395,8 +396,8 @@ CA
                                 <toolbarItem implicitItemIdentifier="7E9D41C3-7507-4616-ADD7-155D61A42C21" label="" paletteLabel="" id="959-e7-6fh">
                                     <nil key="toolTip"/>
                                     <size key="minSize" width="38" height="25"/>
-                                    <size key="maxSize" width="160" height="25"/>
-                                    <textField key="view" identifier="toolbar-month-year-label" horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z6e-zl-2eU">
+                                    <size key="maxSize" width="300" height="25"/>
+                                    <textField key="view" identifier="toolbar-month-year-label" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" id="z6e-zl-2eU">
                                         <rect key="frame" x="0.0" y="14" width="38" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="L" id="uf2-sW-KHg">
@@ -440,10 +441,9 @@ CA
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <datePickerCell key="cell" borderStyle="bezel" alignment="left" id="hcN-XN-qM8">
                                             <font key="font" metaFont="system"/>
-                                            <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
-                                                <!--1982-02-12 08:00:00 -0800-->
-                                                <timeZone key="timeZone" name="US/Pacific"/>
-                                            </calendarDate>
+                                            <date key="date" timeIntervalSinceReferenceDate="-595929600">
+                                                <!--1982-02-12 16:00:00 +0000-->
+                                            </date>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                         </datePickerCell>
