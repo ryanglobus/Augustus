@@ -137,8 +137,8 @@ class AUCalendarView: NSView {
     fileprivate func addEventViewCollectionConstraints() {
         let leftConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0)
         let topConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0)
-        // TODO below is too wide
-        let widthConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0)
+        let scrollerWidth = self.scrollView.verticalScroller?.frame.width ?? CGFloat(0)
+        let widthConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: -1 * scrollerWidth)
         let heightConstraint = NSLayoutConstraint(item: self.eventViewCollection, attribute: .height, relatedBy: .greaterThanOrEqual, toItem: self.scrollView, attribute: .height, multiplier: 1, constant: 0)
         eventViewCollection.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints([leftConstraint, topConstraint, widthConstraint, heightConstraint])

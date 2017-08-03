@@ -20,6 +20,7 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
     
     // TODO handle event modification failure
     
+    private let TITLE_HEIGHT: CGFloat = 32
     fileprivate let log = AULog.instance
 //    var dateViews: [AUEventView] = []
     var monthYearLabel: NSTextField?
@@ -97,14 +98,14 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         // so must manually reduce window height
         let viewFrame = self.view.frame
         var windowFrame_ = self.view.window?.frame
-        windowFrame_?.size.height -= 32 // the height of the title we're about to remove
+        windowFrame_?.size.height -= TITLE_HEIGHT // the height of the title we're about to remove
         self.view.window?.titleVisibility = .hidden
         if let windowFrame = windowFrame_ {
             self.view.window?.setFrame(windowFrame, display: true, animate: true)
         }
         if let window = self.view.window {
             // must manually call windowWillResize, since setFrame will not
-            _ = self.windowWillResize(window, to: viewFrame.size)
+            _ = self.windowWillResize(window, to: NSSize(width: viewFrame.width, height: viewFrame.height + TITLE_HEIGHT))
         }
         self.view.setFrameOrigin(viewFrame.origin)
         self.view.setFrameSize(viewFrame.size)
