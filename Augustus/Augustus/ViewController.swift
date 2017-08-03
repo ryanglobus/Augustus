@@ -102,6 +102,10 @@ class ViewController: NSViewController, NSWindowDelegate, AUCalendarViewDelegate
         if let windowFrame = windowFrame_ {
             self.view.window?.setFrame(windowFrame, display: true, animate: true)
         }
+        if let window = self.view.window {
+            // must manually call windowWillResize, since setFrame will not
+            _ = self.windowWillResize(window, to: viewFrame.size)
+        }
         self.view.setFrameOrigin(viewFrame.origin)
         self.view.setFrameSize(viewFrame.size)
         self.popoverViewController = PopoverViewController.newInstance()
