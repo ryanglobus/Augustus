@@ -21,6 +21,7 @@ class AugustusTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
+        self.continueAfterFailure = false
         // Put setup code here. This method is called before the invocation of each test method in the class.
         calendar.addEventOnDate(firstDayOfWeek, description: "10pm Al Dentist")
         calendar.addEventOnDate(secondDayOfWeek, description: "R Hong Kong")

@@ -103,6 +103,7 @@ class PopoverViewController: NSViewController, NSTextFieldDelegate {
         self.event = nil
         self.eventDescriptionField?.stringValue = ""
         self.addEventButton?.title = "Add Event" // TODO dup String from IB
+        self.color = NSColor.black
     }
     
     func setModeToEdit(_ event: AUEvent) {

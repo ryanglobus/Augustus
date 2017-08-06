@@ -217,7 +217,6 @@
 					3FE17BD91B38E92200EC2BFD = {
 						CreatedOnToolsVersion = 6.3.2;
 						LastSwiftMigration = 0830;
-						TestTargetID = 3FE17BC71B38E92200EC2BFD;
 					};
 				};
 			};
@@ -435,7 +434,6 @@
 		3FE17BE81B38E92200EC2BFD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -450,14 +448,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ryanglobus.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Augustus.app/Contents/MacOS/Augustus";
 			};
 			name = Debug;
 		};
 		3FE17BE91B38E92200EC2BFD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -468,7 +464,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ryanglobus.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Augustus.app/Contents/MacOS/Augustus";
 			};
 			name = Release;
 		};
